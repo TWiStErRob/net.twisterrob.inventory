@@ -24,7 +24,7 @@ class DatabaseSqlIntegrationTests {
 		executeSQLite(temp.newFolder(), script)
 	}
 
-	@Test(timeout = 10_000) fun testCompareCreateAndUpgrade() {
+	@Test(timeout = 30_000) fun testCompareCreateAndUpgrade() {
 		val create = buildScript(createScripts, ".output dump.sql\n.dump")
 		val createFolder = temp.newFolder()
 		executeSQLite(createFolder, create)

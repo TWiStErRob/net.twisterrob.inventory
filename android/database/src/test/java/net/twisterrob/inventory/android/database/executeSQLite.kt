@@ -8,14 +8,19 @@ import java.io.StringWriter
 import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.concurrent.thread
+import kotlin.time.measureTime
 
 fun executeSQLite(dir: File, @Language("SQLite") sql: String) {
 	val script = dir.resolve("sqlite.sql").also { it.writeText(sql) }
 	println("Executing ${script}...")
 	try {
-		println(executeSQLite(dir, script))
-	} finally {
-		println("Finished executing ${script}...")
+		val duration = measureTime {
+			println(executeSQLite(dir, script))
+		}
+		println("Finished executing ${script} in ${duration}.")
+	} catch (e: Throwable) {
+		println("Failed executing ${script}.")
+		throw e
 	}
 }
 
