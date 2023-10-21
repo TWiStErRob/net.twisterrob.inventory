@@ -677,7 +677,8 @@ CREATE VIEW Item_Path AS
 -- Current minimum is Android 5.0 (API 21) SQLite 3.8.6: https://www.sqlite.org/releaselog/3_8_6.html,
 -- which means "The unicode61 tokenizer is now included in FTS4 by default."
 CREATE VIRTUAL TABLE Search USING FTS4 (
-	tokenize=unicode61 'remove_diacritics=2',
+    -- https://www.twisterrob.net/blog/2023/10/sqlite-unicode61-remove-diacritics-2.html
+	tokenize=unicode61 'remove_diacritics=1',
 	name,
 	location
 );

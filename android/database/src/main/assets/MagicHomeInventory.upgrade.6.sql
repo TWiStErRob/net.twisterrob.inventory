@@ -4,7 +4,7 @@
 -- Recreate the Search table with new FTS4 format.
 DROP TABLE IF EXISTS Search;
 CREATE VIRTUAL TABLE Search USING FTS4 (
-	tokenize=unicode61 'remove_diacritics=2',
+	tokenize=unicode61 'remove_diacritics=1',
 	name,
 	location
 );
