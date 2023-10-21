@@ -1,13 +1,16 @@
 .mode column
+.width 120
+--.width auto
 
--- This file is used to simulate user actions to see the DB state before and after
+-- This file is used to simulate user actions to see the DB state before and after.
 -- Some triggers populate the Log table if those lines are uncommented.
 
--- fake some values for Category names
+-- Fake some values for Category names.
 update Category_Name_Cache
 set value = replace(UPPER(substr(key, 10, 1)) || substr(key, 11), '_', ' ');
 
--- Helps to figure out problems with foreign key constraints
+-- Helps to figure out problems with foreign key constraints.
+-- Don't use it always, because it differs in behavior from production.
 --PRAGMA defer_foreign_keys = 1;
 
 .headers off
@@ -16,9 +19,8 @@ select '__________________________________.- Before -.__________________________
 insert into Log (message) values ('Before');
 select '--------------------------------------------------------------------------------';
 .headers on
-.width auto
 
--- verifiy preconditions or pre-state
+-- Verify preconditions or pre-state.
 
 .headers off
 select '';
@@ -29,7 +31,10 @@ select '------------------------------------------------------------------------
 
 BEGIN TRANSACTION;
 
--- write your stuff here
+.headers off
+-- Write your stuff here.
+select 'Not changing anything, to be filled in when something is tested.';
+.headers on
 
 END TRANSACTION;
 
@@ -39,9 +44,8 @@ select '__________________________________.- After -.___________________________
 insert into Log (message) values ('After');
 select '--------------------------------------------------------------------------------';
 .headers on
-.width auto
 
--- verify postconditions or post-state
+-- Verify postconditions or post-state.
 
 .headers off
 select '';

@@ -36,6 +36,12 @@ dependencyResolutionManagement {
 				includeModule("com.google.android", "flexbox")
 			}
 		}
+		ivy {
+			name = "GitHub raw"
+			url = "https://github.com/"
+			patternLayout { artifact("/[organisation]/raw/[revision]/[module].[ext]") }
+			metadataSources.artifact()
+		}
 	}
 }
 
@@ -46,6 +52,7 @@ include(":android:base")
 include(":android:test_helpers")
 includeWithContract(":android:database")
 include(":android:database:test_helpers")
+include(":android:database:sqlite3")
 include(":android:preferences")
 include(":android:data")
 include(":android:data:svg")

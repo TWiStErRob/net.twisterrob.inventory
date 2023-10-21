@@ -17,6 +17,8 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 
+import static net.twisterrob.inventory.android.PreconditionsKt.requireNotNull;
+
 public enum Loaders implements InventoryLoader {
 	PropertyTypes {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle ignore) {
@@ -114,7 +116,7 @@ public enum Loaders implements InventoryLoader {
 	},
 	ItemSearch {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle args) {
-			CharSequence query = args.getCharSequence(SearchManager.QUERY);
+			CharSequence query = requireNotNull(args.getCharSequence(SearchManager.QUERY));
 			return InventoryDatabase.getInstance().searchItems(context.getContentResolver(), query);
 		}
 	},
