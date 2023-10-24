@@ -4,6 +4,7 @@
 -- Recreate the Search table with new FTS4 format.
 DROP TABLE IF EXISTS Search;
 CREATE VIRTUAL TABLE Search USING FTS4 (
+    -- https://www.twisterrob.net/blog/2023/10/sqlite-unicode61-remove-diacritics-2.html
 	tokenize=unicode61 'remove_diacritics=1',
 	name,
 	location
