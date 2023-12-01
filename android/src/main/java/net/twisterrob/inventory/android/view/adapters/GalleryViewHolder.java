@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import java.text.NumberFormat;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.view.View;
 import android.view.View.*;
@@ -9,6 +10,7 @@ import android.widget.*;
 
 import com.bumptech.glide.Glide;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
@@ -28,7 +30,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		super(view);
 		title = view.findViewById(R.id.title);
 		image = view.findViewById(R.id.image);
-		type = view.findViewById(R.id.type);
+		type = getTypeImageView(view);
 		count = view.findViewById(R.id.count);
 
 		view.setOnClickListener(new OnClickListener() {
@@ -51,6 +53,13 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 				return listener.onItemLongClick(getBindingAdapterPosition(), getItemId());
 			}
 		});
+	}
+
+	@SuppressLint("WrongViewCast")
+	private static ImageView getTypeImageView(@NonNull View view) {
+		// REPORT false positive, sees TextView in activity_move.xml,
+		// but in reality it's loading fragment_edit.xml > inc_details_image.xml > @id/type (defined in ids.xml).
+		return view.findViewById(R.id.type);
 	}
 
 	public void bind(Cursor cursor) {
