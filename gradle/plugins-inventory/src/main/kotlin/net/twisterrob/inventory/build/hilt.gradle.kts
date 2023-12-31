@@ -29,6 +29,8 @@ tasks.withType<JavaCompile>().configureEach javac@{
 		// androidx.annotation.*
 		// net.twisterrob.*
 		"-Xlint:-processing",
+		// TODEL https://github.com/google/dagger/issues/4201
+		"-Xlint:-cast",
 	)
 }
 

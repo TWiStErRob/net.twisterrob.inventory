@@ -32,8 +32,8 @@ internal class Mapping {
 		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
 			val message = buildString {
 				append("Line #${num} failed: ${line}\n")
-				0.rangeTo(match.size).forEach {
-					append("Group #${it}: '${match[it]!!.value}'\n")
+				for (group in 0..match.size) {
+					append("Group #${group}: '${match[group]!!.value}'\n")
 				}
 			}
 			throw IllegalArgumentException(message, ex)

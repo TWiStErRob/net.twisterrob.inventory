@@ -5,16 +5,16 @@ agp = "8.2.0"
 # 23.0.0 + agp
 agp-tools = "31.2.0"
 twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
-detekt = "1.23.0"
-kotlin = "1.9.10"
-kotlin-ksp = "1.9.10-1.0.13"
+detekt = "1.23.4"
+kotlin = "1.9.22"
+kotlin-ksp = "1.9.22-1.0.16"
 kotlin-coroutines = "1.7.3"
 
 glide = "4.16.0"
 androidsvg = "1.4"
 flexbox = "2.0.1"
 slf4j = "2.0.10"
-dagger = "2.47"
+dagger = "2.50"
 orbit = "6.1.0"
 
 androidx-activity = "1.7.2" # https://developer.android.com/jetpack/androidx/releases/activity
@@ -63,14 +63,14 @@ xalan = "2.7.1"
 saxon = "10.6"
 javaxInject = "1"
 guava = "27.0.1-jre"
-jbrAnn = "24.0.1"
+jbrAnn = "24.1.0"
 
 test-junit4 = "4.13.2"
 # TODEL NewerVersionAvailable lint exception
 test-mockito = "3.10.0"
 test-mockito-kotlin = "3.2.0"
-test-powermock = "2.0.7"
-test-robolectric = "4.10.3"
+test-powermock = "2.0.9"
+test-robolectric = "4.11.1"
 # Use this instead of 1.3
 # If `hamcrest-1.3` appears in the dependency list, check if it's excluded from all usages.
 test-hamcrest = "2.0.0.0"
