@@ -189,7 +189,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
-		typeImage = view.findViewById(R.id.type);
+		typeImage = getTypeImageView(view);
 		ViewTools.displayedIf(typeImage, this instanceof ItemEditFragment);
 		if (this instanceof ItemEditFragment) {
 			typeImage.setOnClickListener(new OnClickListener() {
@@ -286,6 +286,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				return true;
 			}
 		});
+	}
+
+	@SuppressLint("WrongViewCast")
+	private static ImageView getTypeImageView(@NonNull View view) {
+		// REPORT false positive, sees TextView in activity_move.xml,
+		// but in reality it's loading fragment_edit.xml > inc_details_image.xml > @id/type (defined in ids.xml).
+		return view.findViewById(R.id.type);
 	}
 
 	protected @NonNull TypeAdapter createTypeAdapter() {
