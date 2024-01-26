@@ -12,102 +12,102 @@ jobs:
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Download 'SVG 21' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 21'
           path: 'downloads/SVG 21'
 
       - name: "Download 'SVG 22' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 22'
           path: 'downloads/SVG 22'
 
       - name: "Download 'SVG 23' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 23'
           path: 'downloads/SVG 23'
 
       - name: "Download 'SVG 24' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 24'
           path: 'downloads/SVG 24'
 
       - name: "Download 'SVG 25' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 25'
           path: 'downloads/SVG 25'
 
       - name: "Download 'SVG 26' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 26'
           path: 'downloads/SVG 26'
 
       - name: "Download 'SVG 27' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 27'
           path: 'downloads/SVG 27'
 
       - name: "Download 'SVG 28' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 28'
           path: 'downloads/SVG 28'
 
       - name: "Download 'SVG 29' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 29'
           path: 'downloads/SVG 29'
 
       - name: "Download 'SVG 30' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 30'
           path: 'downloads/SVG 30'
 
       - name: "Download 'SVG 31' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 31'
           path: 'downloads/SVG 31'
 
       - name: "Download 'SVG 32' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 32'
           path: 'downloads/SVG 32'
 
       - name: "Download 'SVG 33' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 33'
           path: 'downloads/SVG 33'
 
       - name: "Download 'SVG 34' artifact."
         if: success() || failure()
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'SVG 34'
           path: 'downloads/SVG 34'
@@ -144,7 +144,7 @@ jobs:
 
       - name: "Upload 'SVG Report' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'SVG Report'
           path: |

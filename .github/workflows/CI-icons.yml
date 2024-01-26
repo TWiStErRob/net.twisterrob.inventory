@@ -17,7 +17,7 @@ jobs:
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Generate icon previews."
         working-directory: android/data/src/main/res/raw
@@ -25,7 +25,7 @@ jobs:
 
       - name: "Upload 'Icon Previews' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'Icon Previews'
           path: |
@@ -45,7 +45,7 @@ jobs:
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Register problem matchers.
         run: echo "::add-matcher::.github/problemMatchers-icons.json"

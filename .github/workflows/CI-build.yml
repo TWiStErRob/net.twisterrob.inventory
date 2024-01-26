@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: "Set up JDK 17."
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: zulu
@@ -32,7 +32,7 @@ jobs:
           log-accepted-android-sdk-licenses: false
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'Lint Results'
           path: |
@@ -81,21 +81,21 @@ jobs:
 
       - name: "Upload 'Detekt Results' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'Detekt Results'
           path: |
             ${{ github.workspace }}/**/build/reports/detekt/detekt.*
 
       - name: "Publish 'Code scanning results / detekt' GitHub Code Scanning analysis."
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
           sarif_file: ${{ github.workspace }}/gradle/plugins-inventory/build/reports/detekt/detekt.sarif
 
       - name: "Upload 'Unit Test Results' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'Unit Test Results'
           path: ${{ github.workspace }}/**/build/reports/tests/*/
@@ -112,7 +112,7 @@ jobs:
 
       - name: "Upload 'APKs' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'APKs'
           path: |
