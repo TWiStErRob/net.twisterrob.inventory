@@ -28,3 +28,12 @@ idea {
 subprojects.forEach { evaluationDependsOn(it.path) } // evaluationDependsOnSubprojects()
 // https://developer.android.com/studio/test/command-line#multi-module-reports-instrumented-tests
 apply(plugin: "android-reporting")
+afterEvaluate {
+	tasks.named("mergeAndroidReports").configure {
+		mustRunAfter(dependsOn)
+		setDependsOn([ ])
+		doFirst {
+			resultsDirectories.removeIf { !it.exists() }
+		}
+	}
+}
