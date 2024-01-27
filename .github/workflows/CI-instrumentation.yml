@@ -33,6 +33,7 @@ jobs:
         
         ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=net.twisterrob.android.test.SkipOnCI
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
+        ./gradlew --no-daemon --stacktrace :mergeAndroidReports
 
     strategy:
       fail-fast: false

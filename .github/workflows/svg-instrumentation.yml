@@ -15,7 +15,7 @@ jobs:
       name-check-results: '🔔 Test: SVG Results {0}'
       script: |
         ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
-        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages :mergeAndroidReports
 
     strategy:
       fail-fast: false
@@ -30,7 +30,8 @@ jobs:
           - 26
           - 27
           - 28
-          - 29
+          # TODO re-enable once https://github.com/ReactiveCircus/android-emulator-runner/issues/373 is resolved.
+          #- 29
           - 30
           - 31
           - 32
