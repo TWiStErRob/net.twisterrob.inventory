@@ -70,12 +70,13 @@ jobs:
           name: 'SVG 28'
           path: 'downloads/SVG 28'
 
-      - name: "Download 'SVG 29' artifact."
-        if: success() || failure()
-        uses: actions/download-artifact@v4
-        with:
-          name: 'SVG 29'
-          path: 'downloads/SVG 29'
+      # TODO re-enable once https://github.com/ReactiveCircus/android-emulator-runner/issues/373 is resolved.
+      #- name: "Download 'SVG 29' artifact."
+      #  if: success() || failure()
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: 'SVG 29'
+      #    path: 'downloads/SVG 29'
 
       - name: "Download 'SVG 30' artifact."
         if: success() || failure()
