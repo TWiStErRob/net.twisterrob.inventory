@@ -30,7 +30,8 @@ jobs:
           - 26
           - 27
           - 28
-          - 29
+          # TODO re-enable once https://github.com/ReactiveCircus/android-emulator-runner/issues/373 is resolved.
+          #- 29
           - 30
           - 31
           - 32
