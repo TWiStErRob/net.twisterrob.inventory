@@ -8,6 +8,9 @@ on:
       - 'android/data/svg/**'
     branches:
       - main
+  pull_request:
+    paths:
+      - '.github/workflows/svg*.yml'
 
 jobs:
 
