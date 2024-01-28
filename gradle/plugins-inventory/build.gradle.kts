@@ -49,16 +49,6 @@ dependencies {
 	testImplementation(libs.test.junit4)
 }
 
-configurations.all {
-	resolutionStrategy {
-		dependencySubstitution {
-			substitute(module("net.sf.proguard:proguard-gradle"))
-				.using(module("com.guardsquare:proguard-gradle:7.3.2"))
-				.because("Latest ProGuard is 7.3.1 which supports Java 11-19, Kotlin 1.8")
-		}
-	}
-}
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
 	kotlinOptions {
 		allWarningsAsErrors = true
