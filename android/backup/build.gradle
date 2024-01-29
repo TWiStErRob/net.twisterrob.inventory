@@ -28,6 +28,7 @@ dependencies {
 	testImplementation(libs.test.durian)
 	testImplementation(libs.test.fishbowl)
 	testImplementation "net.twisterrob.lib:twister-lib-test"
+	testRuntimeOnly(libs.slf4j.simple)
 }
 
 // See NotificationProgressService, XMLExporter, StrictXmlErrorListener, BackupService, BackupZipStreamImporter.
