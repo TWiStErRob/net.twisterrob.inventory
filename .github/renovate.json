@@ -2,5 +2,15 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
 		"local>TWiStErRob/renovate-config"
+	],
+	"packageRules": [
+		{
+			"description": "Don't update AndroidX packages yet.",
+			"matchPackagePrefixes": [
+				"androidx.",
+				"com.google.android.material:"
+			],
+			"enabled": false
+		}
 	]
 }
