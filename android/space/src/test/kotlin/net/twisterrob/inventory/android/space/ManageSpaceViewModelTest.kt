@@ -14,7 +14,7 @@ import net.twisterrob.test.TestRuntimeException
 import org.junit.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verifyZeroInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.orbitmvi.orbit.test.OrbitTestContext
 import org.orbitmvi.orbit.test.test
@@ -120,7 +120,7 @@ class ManageSpaceViewModelTest {
 				)
 			}
 			containerHost.clear()
-			verifyZeroInteractions(mockManager)
+			verifyNoInteractions(mockManager)
 		}
 	}
 
@@ -140,7 +140,7 @@ class ManageSpaceViewModelTest {
 			}
 			containerHost.actionCancelled()
 			expectState { copy(confirmation = null) }
-			verifyZeroInteractions(mockManager)
+			verifyNoInteractions(mockManager)
 		}
 	}
 
