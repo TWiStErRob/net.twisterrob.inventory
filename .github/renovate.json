@@ -11,6 +11,13 @@
 				"com.google.android.material:"
 			],
 			"enabled": false
+		},
+		{
+			"description": "Don't update Guava.",
+			"matchPackageNames": [
+				"com.google.guava:guava"
+			],
+			"enabled": false
 		}
 	]
 }
