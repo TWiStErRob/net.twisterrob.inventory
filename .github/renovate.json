@@ -5,6 +5,13 @@
 	],
 	"packageRules": [
 		{
+			"description": "Don't update Gradle versions yet, it's a complex build.",
+			"matchPackageNames": [
+				"gradle"
+			],
+			"enabled": false
+		},
+		{
 			"description": "Don't update AndroidX packages yet.",
 			"matchPackagePrefixes": [
 				"androidx.",
