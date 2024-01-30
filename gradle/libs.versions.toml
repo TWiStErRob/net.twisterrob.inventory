@@ -148,6 +148,7 @@ dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger
 dagger-hilt-apt = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 xml-xalan = { module = "xalan:xalan", version.ref = "xalan" }
+xml-xalan-serializer = { module = "xalan:serializer", version.ref = "xalan" }
 xml-saxon = { module = "net.sf.saxon:Saxon-HE", version.ref = "saxon" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 orbit-viewModel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
