@@ -51,13 +51,10 @@ dependencies {
 	testImplementation(libs.test.junit4)
 	testImplementation 'net.twisterrob.lib:twister-lib-hamcrest'
 	testImplementation 'net.twisterrob.lib:twister-lib-mockito'
-	testImplementation(libs.test.powermockMockito2)
-	testImplementation(libs.test.powermockJunit4)
-	testImplementation(libs.test.powermockJunit4Rule)
-	testImplementation(libs.test.powermockXstream)
 	testImplementation(libs.test.robolectric)
 	testImplementation(libs.test.robolectricMultidexShadows)
 	testImplementation(libs.androidx.test.core)
+	testRuntimeOnly(libs.slf4j.simple)
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"

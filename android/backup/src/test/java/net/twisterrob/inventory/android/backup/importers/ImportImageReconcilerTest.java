@@ -49,12 +49,6 @@ public class ImportImageReconcilerTest {
 	@InjectMocks BackupZipStreamImporter.ImportImageReconciler reconciler;
 	@InjectMocks BackupImageDatabase database;
 
-	@Before public void setUp() {
-		when(res.getString(anyInt(), any())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
-		doAnswer(new LoggingAnswer<>(LOG)).when(progress).warning(anyString());
-		doAnswer(new LoggingAnswer<>(LOG)).when(progress).error(anyString());
-	}
-
 	@Test public void testMatchedImageSaved() throws IOException {
 		reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
 		reconciler.importImage(Item, ITEM_ID, ITEM_NAME, IMAGE);
@@ -118,6 +112,9 @@ public class ImportImageReconcilerTest {
 	}
 
 	@Test public void testUnmatchedImageRemoved() throws IOException {
+		when(res.getString(anyInt(), any(Object[].class)))
+				.thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		verboseLogging();
 		reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
 		reconciler.importImage(Item, ITEM_ID, ITEM_NAME, OTHER_IMAGE);
 		reconciler.hasData();
@@ -226,6 +223,9 @@ public class ImportImageReconcilerTest {
 	}
 
 	@Test public void testDuplicateMatchedReference() throws IOException {
+		when(res.getString(anyInt(), any(Object[].class)))
+				.thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		verboseLogging();
 		reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
 		reconciler.importImage(Item, ITEM_ID, ITEM_NAME, IMAGE);
 		reconciler.importImage(Item, OTHER_ITEM_ID, OTHER_ITEM_NAME, IMAGE);
@@ -236,6 +236,11 @@ public class ImportImageReconcilerTest {
 		verify(progress).warning(and(contains(OTHER_ITEM_NAME), contains(IMAGE)));
 	}
 
+	private void verboseLogging() {
+		// TODO doesn't work with slf4j.simple.
+		doAnswer(new LoggingAnswer<>(LOG)).when(progress).warning(anyString());
+		doAnswer(new LoggingAnswer<>(LOG)).when(progress).error(anyString());
+	}
 	private static void assertDuplicate(String image, Throwable thrown) {
 		assertThat(thrown, hasMessage(allOf(containsStringIgnoringCase("duplicate"), containsString(image))));
 	}

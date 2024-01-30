@@ -63,8 +63,10 @@ public abstract class BackupZipImporterTestBase {
 		importer = new BackupImporter(dispatcherMock, xmlImporterMock, callImport);
 	}
 	@Before public void stubResources() {
-		when(res.getString(anyInt())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
-		when(res.getString(anyInt(), any())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		when(res.getString(anyInt()))
+				.thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		when(res.getString(anyInt(), any(Object[].class)))
+				.thenAnswer(new GetStringVarargsAnswer(R.string.class));
 	}
 
 	protected abstract void callImport(InputStream stream) throws Exception;

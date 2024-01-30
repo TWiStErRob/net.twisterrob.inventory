@@ -27,12 +27,13 @@
 			"enabled": false
 		},
 		{
-			"description": "Don't update Mockito, PowerMock does not support newer.",
+			"description": "Don't update Mockito, requires Java 11.",
 			"matchPackageNames": [
 				"org.mockito:mockito-android",
 				"org.mockito:mockito-inline",
 				"org.mockito.kotlin:mockito-kotlin"
 			],
+			"matchUpdateTypes": "major",
 			"enabled": false
 		}
 	]
