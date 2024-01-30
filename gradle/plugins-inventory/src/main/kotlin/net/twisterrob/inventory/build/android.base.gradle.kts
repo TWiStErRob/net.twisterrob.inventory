@@ -20,7 +20,7 @@ android {
 		minSdk = 21
 	}
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_1_7
 		targetCompatibility = JavaVersion.VERSION_1_8
 		tasks.withType<JavaCompile>().configureEach {
 			// warning: [options] source value 7 is obsolete and will be removed in a future release

@@ -13,8 +13,10 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
+import org.mockito.MockedConstruction.MockInitializer;
 import org.mockito.MockedStatic;
 import org.mockito.MockingDetails;
+import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +29,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -118,9 +119,12 @@ public abstract class PowerMockTests {
 
 	/** Check that the new operator can be mocked. */
 	@Test public void testNew() {
-		MockedConstruction.MockInitializer<New> stubs = (mock, context) ->
+		MockInitializer<New> init = new MockInitializer<New>() {
+			@Override public void prepare(New mock, MockedConstruction.Context context) {
 				when(mock.getter()).thenReturn(test.getMethodName());
-		try (MockedConstruction<New> mockedNew = mockConstruction(New.class, stubs)) {
+			}
+		};
+		try (MockedConstruction<New> mockedNew = mockConstruction(New.class, init)) {
 			String result = new New().getter();
 
 			assertEquals(test.getMethodName(), result);
@@ -130,27 +134,40 @@ public abstract class PowerMockTests {
 
 	/** Check that static methods can be mocked. */
 	@Test public void testStatic() {
+		MockedStatic.Verification staticMethod = new MockedStatic.Verification() {
+			@Override public void apply() {
+				Static.staticMethod();
+			}
+		};
 		try (MockedStatic<Static> mockedStatic = mockStatic(Static.class)) {
-			mockedStatic.when(Static::staticMethod).thenReturn(test.getMethodName());
+			mockedStatic.when(staticMethod).thenReturn(test.getMethodName());
 
 			String result = Static.staticMethod();
 
 			assertEquals(test.getMethodName(), result);
-			mockedStatic.verify(Static::staticMethod);
+			mockedStatic.verify(staticMethod);
 		}
 	}
 
 	/** Check that static methods can be mocked. */
 	@Test public void testStatic_reflective() {
-		MockedStatic.Verification callStaticMethod = () ->
+		MockedStatic.Verification staticMethod = new MockedStatic.Verification() {
+			@Override public void apply() {
+				Static.staticMethod();
+			}
+		};
+		MockedStatic.Verification callStaticMethod = new MockedStatic.Verification() {
+			@Override public void apply() throws Throwable {
 				Static.class.getDeclaredMethod("staticMethod").invoke(null);
+			}
+		};
 		try (MockedStatic<Static> mockedStatic = mockStatic(Static.class)) {
 			mockedStatic.when(callStaticMethod).thenReturn(test.getMethodName());
 
 			String result = Static.staticMethod();
 
 			assertEquals(test.getMethodName(), result);
-			mockedStatic.verify(Static::staticMethod);
+			mockedStatic.verify(staticMethod);
 		}
 	}
 
@@ -209,9 +226,12 @@ public abstract class PowerMockTests {
 	}
 
 	@Test public void testMockNewAndroidClass() {
-		Looper looper = mock(Looper.class);
-		MockedConstruction.MockInitializer<Handler> init = (mock, context) ->
+		final Looper looper = mock(Looper.class);
+		MockInitializer<Handler> init = new MockInitializer<Handler>() {
+			@Override public void prepare(Handler mock, MockedConstruction.Context context) {
 				when(mock.getLooper()).thenReturn(looper);
+			}
+		};
 		try (MockedConstruction<Handler> mockedNew = mockConstruction(Handler.class, init)) {
 
 			Handler powerNew = new Handler(looper);
@@ -226,7 +246,7 @@ public abstract class PowerMockTests {
 	@Test public void testMockNormalAndroidClass() {
 		View.OnClickListener androidMock = mock(View.OnClickListener.class);
 		RuntimeException ex = new RuntimeException("test");
-		doThrow(ex).when(androidMock).onClick(any()); // void method
+		doThrow(ex).when(androidMock).onClick(Mockito.<View>any()); // void method
 
 		try {
 			androidMock.onClick(null);
