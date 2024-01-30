@@ -66,17 +66,18 @@
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
 	<issue id="NewerVersionAvailable">
-		<!-- It's complex to find matching versions of PowerMock / Robolectric and Mockito. -->
-		<ignore regexp="^A newer version of org.mockito:mockito-core" />
+		<!-- Ignore for now until Renovate is enabled. -->
+		<ignore regexp="^A newer version of org.mockito" />
+		<ignore regexp="^A newer version of net.sf.saxon:Saxon-HE" />
+		<ignore regexp="^A newer version of com.google.guava:guava" />
 	</issue>
 	<issue id="AndroidGradlePluginVersion" severity="ignore">
 		<!-- Ignore for now until Renovate is enabled. -->
 	</issue>
-	<issue id="GradleDependency" severity="ignore">
+	<issue id="GradleDependency">
 		<!-- Ignore for now until Renovate is enabled. -->
-	</issue>
-	<issue id="NewerVersionAvailable" severity="ignore">
-		<!-- Ignore for now until Renovate is enabled. -->
+		<ignore regexp="^A newer version of androidx\." />
+		<ignore regexp="^A newer version of com.google.android.material:material" />
 	</issue>
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
