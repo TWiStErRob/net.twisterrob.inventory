@@ -19,7 +19,7 @@ configurations.configureEach {
 tasks.withType<KotlinCompile>().configureEach kotlin@{
 	compilerOptions { 
 		allWarningsAsErrors.set(true)
-		jvmTarget.set(JvmTarget.fromTarget(JavaVersion.VERSION_1_8.toString()))
+		jvmTarget.set(JvmTarget.fromTarget(JavaVersion.VERSION_11.toString()))
 		freeCompilerArgs.add("-Xcontext-receivers")
 	}
 }
