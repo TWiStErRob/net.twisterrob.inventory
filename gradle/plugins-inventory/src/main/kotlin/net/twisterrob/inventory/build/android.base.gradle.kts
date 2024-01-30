@@ -22,10 +22,6 @@ android {
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_11
 		targetCompatibility = JavaVersion.VERSION_11
-		tasks.withType<JavaCompile>().configureEach {
-			// warning: [options] source value 7 is obsolete and will be removed in a future release
-			options.compilerArgs.add("-Xlint:-options")
-		}
 	}
 	lint {
 		checkReleaseBuilds = false
