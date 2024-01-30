@@ -1,40 +1,68 @@
 package net.twisterrob.test.frameworks;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.*;
+import org.hamcrest.Description;
+import org.hamcrest.DiagnosingMatcher;
+import org.hamcrest.Matcher;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
-import org.mockito.*;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.MockingDetails;
+import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.mockingDetails;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.os.*;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
-import net.twisterrob.test.frameworks.classes.*;
+import androidx.annotation.NonNull;
+
+import net.twisterrob.test.frameworks.classes.Final;
+import net.twisterrob.test.frameworks.classes.New;
+import net.twisterrob.test.frameworks.classes.Private;
+import net.twisterrob.test.frameworks.classes.Static;
+import net.twisterrob.test.frameworks.classes.StaticPrivate;
 
 /**
- * Base class for {@link PowerMockito PowerMock} tests. Simply to prevent duplication.
- * It can be used by multiple setup approaches and tests basic features of PowerMock.
+ * Base class for advanced {@link org.mockito.Mockito} tests. Simply to prevent duplication.
+ * It can be used by multiple setup approaches and tests features of {@link org.mockito.Mockito}.
+ * Originally this was backed by PowerMock, which is unmaintained.
+ * Luckily Mockito inline mock-maker already supports most features.
  */
-//@PowerMockIgnore({
-//		"org.mockito.*", "org.powermock.*", "org.powermock.api.mockito.repackaged.*", "com.thoughtworks.xstream.*",
-//		"java.*", "javax.*", "org.junit.*", "org.gradle.*",
-//		"org.fusesource.jansi.*", "org.w3c.*",
-//		"org.robolectric.*", "android.*", "org.apache.*", "org.json.*"
-//})
 public abstract class PowerMockTests {
 	/**
 	 * Used to generate something unique to be used in stubbing for each test.
 	 */
 	@Rule public final TestName test = new TestName();
 
-	@PrepareOnlyThisForTest(Final.class)
 	public static abstract class Inner {
 		@Rule public final TestName test = new TestName();
 
@@ -42,13 +70,13 @@ public abstract class PowerMockTests {
 
 		@Test public void testAnnotations() {
 			assertNotNull(mockFinal);
-			assertTrue(Mockito.mockingDetails(mockFinal).isMock());
+			assertTrue(mockingDetails(mockFinal).isMock());
 		}
 
 		/** Check that final classes/methods can be mocked. */
 		@Test public void testFinal_doReturnWhen_onAnnotated() {
 			//noinspection ResultOfMethodCallIgnored it's stubbing
-			PowerMockito.doReturn(test.getMethodName()).when(mockFinal).finalMethod();
+			doReturn(test.getMethodName()).when(mockFinal).finalMethod();
 
 			String result = mockFinal.finalMethod();
 
@@ -57,7 +85,7 @@ public abstract class PowerMockTests {
 
 		/** Check that final classes/methods can be mocked. */
 		@Test public void testFinal_whenThenReturn_onAnnotated() {
-			PowerMockito.when(mockFinal.finalMethod()).thenReturn(test.getMethodName());
+			when(mockFinal.finalMethod()).thenReturn(test.getMethodName());
 
 			String result = mockFinal.finalMethod();
 
@@ -66,24 +94,22 @@ public abstract class PowerMockTests {
 	}
 
 	/** Check that final classes/methods can be mocked. */
-	@PrepareOnlyThisForTest(Final.class)
 	@Test public void testFinal_whenThenReturn() {
-		Final mock = PowerMockito.mock(Final.class);
-		PowerMockito.when(mock.finalMethod()).thenReturn(test.getMethodName());
+		Final mock = mock(Final.class);
+		when(mock.finalMethod()).thenReturn(test.getMethodName());
 
 		String result = mock.finalMethod();
 
 		assertEquals(test.getMethodName(), result);
 		//noinspection ResultOfMethodCallIgnored it's a verify()
-		Mockito.verify(mock).finalMethod();
+		verify(mock).finalMethod();
 	}
 
 	/** Check that final classes/methods can be mocked. */
-	@PrepareOnlyThisForTest(Final.class)
 	@Test public void testFinal_doReturnWhen() {
-		Final mock = PowerMockito.mock(Final.class);
+		Final mock = mock(Final.class);
 		//noinspection ResultOfMethodCallIgnored it's stubbing
-		PowerMockito.doReturn(test.getMethodName()).when(mock).finalMethod();
+		doReturn(test.getMethodName()).when(mock).finalMethod();
 
 		String result = mock.finalMethod();
 
@@ -91,111 +117,116 @@ public abstract class PowerMockTests {
 	}
 
 	/** Check that the new operator can be mocked. */
-	@PrepareOnlyThisForTest(New.class)
-	@Test public void testNew() throws Exception {
-		New mock = PowerMockito.mock(New.class);
-		PowerMockito.when(mock.getter()).thenReturn(test.getMethodName());
-		PowerMockito.whenNew(New.class).withNoArguments().thenReturn(mock);
+	@Test public void testNew() {
+		MockedConstruction.MockInitializer<New> stubs = (mock, context) ->
+				when(mock.getter()).thenReturn(test.getMethodName());
+		try (MockedConstruction<New> mockedNew = mockConstruction(New.class, stubs)) {
+			String result = new New().getter();
 
-		String result = new New().getter();
-
-		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyNew(New.class).withNoArguments();
+			assertEquals(test.getMethodName(), result);
+			assertThat(mockedNew.constructed(), hasSize(1));
+		}
 	}
 
 	/** Check that static methods can be mocked. */
-	@PrepareOnlyThisForTest(Static.class)
 	@Test public void testStatic() {
-		PowerMockito.mockStatic(Static.class);
-		PowerMockito.when(Static.staticMethod()).thenReturn(test.getMethodName());
+		try (MockedStatic<Static> mockedStatic = mockStatic(Static.class)) {
+			mockedStatic.when(Static::staticMethod).thenReturn(test.getMethodName());
 
-		String result = Static.staticMethod();
+			String result = Static.staticMethod();
 
-		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyStatic(Static.class);
-		//noinspection ResultOfMethodCallIgnored it's a verify()
-		Static.staticMethod();
+			assertEquals(test.getMethodName(), result);
+			mockedStatic.verify(Static::staticMethod);
+		}
 	}
 
 	/** Check that static methods can be mocked. */
-	@PrepareOnlyThisForTest(Static.class)
-	@Test public void testStatic_reflective() throws Exception {
-		PowerMockito.mockStatic(Static.class);
-		PowerMockito.when(Static.class, "staticMethod").thenReturn(test.getMethodName());
+	@Test public void testStatic_reflective() {
+		MockedStatic.Verification callStaticMethod = () ->
+				Static.class.getDeclaredMethod("staticMethod").invoke(null);
+		try (MockedStatic<Static> mockedStatic = mockStatic(Static.class)) {
+			mockedStatic.when(callStaticMethod).thenReturn(test.getMethodName());
 
-		String result = Static.staticMethod();
+			String result = Static.staticMethod();
 
-		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyStatic(Static.class);
-		//noinspection ResultOfMethodCallIgnored it's a verify()
-		Static.staticMethod();
+			assertEquals(test.getMethodName(), result);
+			mockedStatic.verify(Static::staticMethod);
+		}
 	}
 
 	/** Check that private methods can be mocked. */
-	@PrepareOnlyThisForTest(Private.class)
+	@Ignore("Mockito doesn't support mocking private methods, PowerMock did.")
 	@Test public void testPrivate() throws Exception {
-		Private mock = PowerMockito.spy(new Private());
-		PowerMockito.doReturn(test.getMethodName()).when(mock, "privateMethod");
+		Private mock = spy(new Private());
+		Method privateMethod = Private.class.getDeclaredMethod("privateMethod");
+		privateMethod.setAccessible(true);
+		privateMethod.invoke(doReturn(test.getMethodName()).when(mock));
 
 		String result = mock.publicMethod();
 
 		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyPrivate(mock).invoke("privateMethod");
+		privateMethod.invoke(verify(mock));
 	}
 
 	/** Check that private static methods can be mocked. */
-	@PrepareOnlyThisForTest(StaticPrivate.class)
-	@Test public void testStaticPrivate_whenThenReturn() throws Exception {
-		PowerMockito.spy(StaticPrivate.class);
-		PowerMockito.when(StaticPrivate.class, "privateStaticMethod").thenReturn(test.getMethodName());
+	@SuppressWarnings({"try", "unused"})
+	@Ignore("Mockito doesn't support mocking private methods, PowerMock did.")
+	@Test public void testStaticPrivate_whenThenReturn() {
+		Answer<Object> spy = CALLS_REAL_METHODS;
+		try (MockedStatic<StaticPrivate> mockedStatic = mockStatic(StaticPrivate.class, spy)) {
+			//PowerMockito.when(StaticPrivate.class, "privateStaticMethod").thenReturn(test.getMethodName());
 
-		String result = StaticPrivate.publicStaticMethod();
+			String result = StaticPrivate.publicStaticMethod();
 
-		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyPrivate(StaticPrivate.class).invoke("privateStaticMethod");
+			assertEquals(test.getMethodName(), result);
+			//PowerMockito.verifyPrivate(StaticPrivate.class).invoke("privateStaticMethod");
+		}
 	}
 
 	/** Check that private static methods can be mocked. */
-	@PrepareOnlyThisForTest(StaticPrivate.class)
-	@Test public void testStaticPrivate_doReturnWhen() throws Exception {
-		PowerMockito.spy(StaticPrivate.class);
-		PowerMockito.doReturn(test.getMethodName()).when(StaticPrivate.class, "privateStaticMethod");
+	@SuppressWarnings({"try", "unused"})
+	@Ignore("Mockito doesn't support mocking private methods, PowerMock did.")
+	@Test public void testStaticPrivate_doReturnWhen() {
+		Answer<Object> spy = CALLS_REAL_METHODS;
+		try (MockedStatic<StaticPrivate> mockedStatic = mockStatic(StaticPrivate.class, spy)) {
+			//PowerMockito.doReturn(test.getMethodName()).when(StaticPrivate.class, "privateStaticMethod");
 
-		String result = StaticPrivate.publicStaticMethod();
+			String result = StaticPrivate.publicStaticMethod();
 
-		assertEquals(test.getMethodName(), result);
-		PowerMockito.verifyPrivate(StaticPrivate.class).invoke("privateStaticMethod");
+			assertEquals(test.getMethodName(), result);
+			//PowerMockito.verifyPrivate(StaticPrivate.class).invoke("privateStaticMethod");
+		}
 	}
 
-	@PrepareOnlyThisForTest(AtomicBoolean.class)
-	@Test public void testMockNewJavaClass() throws Exception {
-		AtomicBoolean mock = Mockito.mock(AtomicBoolean.class);
-		assertNotNull("Mockito should create mocks as usual", mock);
-		PowerMockito.whenNew(AtomicBoolean.class).withArguments(false).thenReturn(mock);
+	@Test public void testMockNewJavaClass() {
+		try (MockedConstruction<AtomicBoolean> mockedNew = mockConstruction(AtomicBoolean.class)) {
+			AtomicBoolean powerNew = new AtomicBoolean(false);
 
-		AtomicBoolean powerNew = new AtomicBoolean(false);
-
-		assertThat(powerNew, sameInstance(mock));
-		assertThat(new AtomicBoolean(true), not(sameInstance(powerNew)));
+			assertThat(powerNew, isMock());
+			assertEquals(mockedNew.constructed(), Collections.singletonList(powerNew));
+			assertThat(new AtomicBoolean(true), not(sameInstance(powerNew)));
+		}
 	}
 
-	@PrepareOnlyThisForTest(Handler.class)
-	@Test public void testMockNewAndroidClass() throws Exception {
-		Looper looper = Mockito.mock(Looper.class);
-		Handler handler = Mockito.mock(Handler.class);
-		assertNotNull("Mockito should create mocks as usual", handler);
-		PowerMockito.whenNew(Handler.class).withArguments(looper).thenReturn(handler);
+	@Test public void testMockNewAndroidClass() {
+		Looper looper = mock(Looper.class);
+		MockedConstruction.MockInitializer<Handler> init = (mock, context) ->
+				when(mock.getLooper()).thenReturn(looper);
+		try (MockedConstruction<Handler> mockedNew = mockConstruction(Handler.class, init)) {
 
-		Handler powerNew = new Handler(looper);
+			Handler powerNew = new Handler(looper);
 
-		assertThat(powerNew, sameInstance(handler));
-		assertThat(new Handler(looper, null), not(sameInstance(powerNew)));
+			assertThat(powerNew, isMock());
+			assertEquals(mockedNew.constructed(), Collections.singletonList(powerNew));
+			assertThat(powerNew.getLooper(), sameInstance(looper));
+			assertThat(new Handler(looper), not(sameInstance(powerNew)));
+		}
 	}
 
 	@Test public void testMockNormalAndroidClass() {
-		View.OnClickListener androidMock = PowerMockito.mock(View.OnClickListener.class);
+		View.OnClickListener androidMock = mock(View.OnClickListener.class);
 		RuntimeException ex = new RuntimeException("test");
-		PowerMockito.doThrow(ex).when(androidMock).onClick(Mockito.<View>any()); // void method
+		doThrow(ex).when(androidMock).onClick(any()); // void method
 
 		try {
 			androidMock.onClick(null);
@@ -206,8 +237,8 @@ public abstract class PowerMockTests {
 	}
 
 	@Test public void testMockFinalAndroidClass() {
-		SQLiteDatabase androidFinalMock = PowerMockito.mock(SQLiteDatabase.class);
-		PowerMockito.when(androidFinalMock.getPageSize()).thenReturn(12345L);
+		SQLiteDatabase androidFinalMock = mock(SQLiteDatabase.class);
+		when(androidFinalMock.getPageSize()).thenReturn(12345L);
 
 		long result = androidFinalMock.getPageSize();
 
@@ -215,8 +246,8 @@ public abstract class PowerMockTests {
 	}
 
 	@Test public void testPowerMockFinalAndroidClassAndMethod() {
-		SQLiteDatabase androidFinalMock = PowerMockito.mock(SQLiteDatabase.class);
-		PowerMockito.when(androidFinalMock.getPath()).thenReturn(test.getMethodName());
+		SQLiteDatabase androidFinalMock = mock(SQLiteDatabase.class);
+		when(androidFinalMock.getPath()).thenReturn(test.getMethodName());
 
 		String result = androidFinalMock.getPath();
 
@@ -224,11 +255,27 @@ public abstract class PowerMockTests {
 	}
 
 	@Test public void testMockitoMockFinalAndroidClassAndMethod() {
-		SQLiteDatabase androidFinalMock = Mockito.mock(SQLiteDatabase.class);
-		PowerMockito.when(androidFinalMock.getPath()).thenReturn(test.getMethodName());
+		SQLiteDatabase androidFinalMock = mock(SQLiteDatabase.class);
+		when(androidFinalMock.getPath()).thenReturn(test.getMethodName());
 
 		String result = androidFinalMock.getPath();
 
 		assertEquals("when-thenReturn should've stubbed this call", test.getMethodName(), result);
+	}
+	
+	protected static @NonNull Matcher<Object> isMock() {
+		return new DiagnosingMatcher<Object>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("is mock");
+			}
+			@Override protected boolean matches(Object item, Description mismatchDescription) {
+				MockingDetails details = mockingDetails(item);
+				if (!details.isMock()) {
+					mismatchDescription.appendText("Not a mock: ").appendValue(item);
+					return false;
+				}
+				return true;
+			}
+		};
 	}
 }

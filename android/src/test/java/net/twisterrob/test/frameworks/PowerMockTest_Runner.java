@@ -1,13 +1,13 @@
 package net.twisterrob.test.frameworks;
 
 import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(PowerMockRunner.class)
-@SuppressWarnings("JUnitTestCaseWithNoTests") // inherited, testing those with this setup approach
+@RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("JUnitTestCaseWithNoTests") // Inherited, testing those with this setup approach.
 public class PowerMockTest_Runner extends PowerMockTests {
 
-	@RunWith(PowerMockRunner.class)
+	@RunWith(MockitoJUnitRunner.class)
 	public static class Inner extends PowerMockTests.Inner {
 	}
 }
