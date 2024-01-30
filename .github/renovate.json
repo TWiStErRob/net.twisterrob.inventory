@@ -26,7 +26,6 @@
 				"org.mockito:mockito-inline",
 				"org.mockito.kotlin:mockito-kotlin"
 			],
-			"matchUpdateTypes": "major",
 			"enabled": false
 		},
 		{
