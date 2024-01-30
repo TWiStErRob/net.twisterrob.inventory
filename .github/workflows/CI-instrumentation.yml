@@ -8,7 +8,7 @@ jobs:
   instrumentation:
     name: "${{ matrix.api }}"
 
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@1d46840cdd22e378efb5ff1e61ee42cdba3310e0 # v1
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@19333c04e57739ec6074b09c6ca09c225c94dc09 # v1
     with:
       android-api: ${{ matrix.api }}
       timeout-minutes: 60
