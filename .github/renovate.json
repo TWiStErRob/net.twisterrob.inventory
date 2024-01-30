@@ -34,14 +34,6 @@
 				"org.mockito.kotlin:mockito-kotlin"
 			],
 			"enabled": false
-		},
-		{
-			"description": "Don't update Saxon, requires Java 8.",
-			"matchPackageNames": [
-				"net.sf.saxon:Saxon-HE"
-			],
-			"matchUpdateTypes": "major",
-			"enabled": false
 		}
 	]
 }

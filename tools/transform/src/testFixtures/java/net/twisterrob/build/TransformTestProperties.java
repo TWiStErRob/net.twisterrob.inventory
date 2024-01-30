@@ -21,7 +21,7 @@ public class TransformTestProperties {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xslt.html"));
 	}
 	File getOutputHtml() {
-		return new File(getOutputDir(), "data-" + getName() + ".csv");
+		return new File(getOutputDir(), "data-" + getName() + ".html");
 	}
 
 	File getXsltCsv() {

@@ -68,7 +68,6 @@
 	<issue id="NewerVersionAvailable">
 		<!-- Ignore for now until Renovate is enabled. -->
 		<ignore regexp="^A newer version of org.mockito" />
-		<ignore regexp="^A newer version of net.sf.saxon:Saxon-HE" />
 		<ignore regexp="^A newer version of com.google.guava:guava" />
 	</issue>
 	<issue id="AndroidGradlePluginVersion" severity="ignore">

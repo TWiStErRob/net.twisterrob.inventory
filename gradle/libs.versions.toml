@@ -60,7 +60,7 @@ androidx-test-runner = "1.5.2" # https://developer.android.com/jetpack/androidx/
 androidx-test-espresso = "3.5.1" # https://developer.android.com/jetpack/androidx/releases/test
 
 xalan = "2.7.3"
-saxon = "10.9"
+saxon = "12.4"
 javaxInject = "1"
 guava = "27.0.1-jre"
 jbrAnn = "24.1.0"
