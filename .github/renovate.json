@@ -18,6 +18,24 @@
 				"com.google.guava:guava"
 			],
 			"enabled": false
+		},
+		{
+			"description": "Don't update Mockito, PowerMock does not support newer.",
+			"matchPackageNames": [
+				"org.mockito:mockito-android",
+				"org.mockito:mockito-inline",
+				"org.mockito.kotlin:mockito-kotlin"
+			],
+			"matchUpdateTypes": "major",
+			"enabled": false
+		},
+		{
+			"description": "Don't update Saxon, will do it later.",
+			"matchPackageNames": [
+				"net.sf.saxon:Saxon-HE"
+			],
+			"matchUpdateTypes": "major",
+			"enabled": false
 		}
 	]
 }
