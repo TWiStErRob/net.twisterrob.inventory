@@ -49,6 +49,7 @@ testing.suites {
 	registerIntegrationTest("xalan") {
 		dependencies {
 			implementation(libs.xml.xalan)
+			implementation(libs.xml.xalan.serializer)
 		}
 	}
 	registerIntegrationTest("saxon") {

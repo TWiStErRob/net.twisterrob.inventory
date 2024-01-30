@@ -38,25 +38,15 @@ dependencies {
 	// UpgradeTestTask: FileUtils, StdLogger, ILogger
 	compileOnly(libs.plugin.android.tools.common)
 	// instrumentation.gradle.kts
-	compileOnly("com.android.tools.utp:android-test-plugin-result-listener-gradle-proto:31.1.0")
+	compileOnly("com.android.tools.utp:android-test-plugin-result-listener-gradle-proto:31.2.2")
 	compileOnly("com.google.testing.platform:core-proto:0.0.8-alpha08")
-	compileOnly("com.google.protobuf:protobuf-java:3.19.3")
+	compileOnly("com.google.protobuf:protobuf-java:3.25.2")
 	// endregion
 	
 	// TODEL https://github.com/gradle/gradle/issues/15383
 	implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
 
 	testImplementation(libs.test.junit4)
-}
-
-configurations.all {
-	resolutionStrategy {
-		dependencySubstitution {
-			substitute(module("net.sf.proguard:proguard-gradle"))
-				.using(module("com.guardsquare:proguard-gradle:7.3.1"))
-				.because("Latest ProGuard is 7.3.1 which supports Java 11-19, Kotlin 1.8")
-		}
-	}
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
