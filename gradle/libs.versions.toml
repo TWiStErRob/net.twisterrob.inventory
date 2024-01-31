@@ -13,7 +13,7 @@ kotlin-coroutines = "1.7.3"
 
 glide = "4.16.0"
 androidsvg = "1.4"
-flexbox = "2.0.1"
+flexbox = "3.0.0"
 slf4j = "2.0.11"
 dagger = "2.50"
 orbit = "6.1.0"
@@ -90,7 +90,7 @@ kotlin-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-tes
 androidsvg = { module = "com.caverock:androidsvg", version.ref = "androidsvg" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
-flexbox = { module = "com.google.android:flexbox", version.ref = "flexbox" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 annotations-jetbrains = { module = "org.jetbrains:annotations", version.ref = "jbrAnn" }
