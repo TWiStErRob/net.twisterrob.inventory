@@ -67,7 +67,7 @@
 	</issue>
 	<issue id="NewerVersionAvailable">
 		<!-- Ignore for now until Renovate is enabled. -->
-		<ignore regexp="^A newer version of org.mockito" />
+		<ignore regexp="^A newer version of org.mockito:mockito-android" />
 		<ignore regexp="^A newer version of com.google.guava:guava" />
 	</issue>
 	<issue id="AndroidGradlePluginVersion" severity="ignore">
@@ -90,9 +90,7 @@
 		<!-- Keeping historical code for documentation purposes for now. -->
 	</issue>
 	<issue id="InvalidPackage">
-		<ignore regexp="Invalid package reference in net.bytebuddy:byte-buddy-agent; not included in Android: `java.lang.instrument`. Referenced from `net.bytebuddy.agent.ByteBuddyAgent`." />
-		<ignore regexp="Invalid package reference in net.bytebuddy:byte-buddy-agent; not included in Android: `java.lang.management`. Referenced from `net.bytebuddy.agent.ByteBuddyAgent.ProcessProvider.ForCurrentVm.ForLegacyVm`." />
-		<ignore regexp="Invalid package reference in org.mockito:mockito-core; not included in Android: `javax.tools`. Referenced from `org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker`." />
+		<ignore regexp="Invalid package reference in org.mockito:mockito-core; not included in Android: `java.lang.instrument`. Referenced from `org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator`." />
 	</issue>
 	<issue id="MissingClass">
 		<!-- REPORT false positive: internal library stuff is not picked up. -->

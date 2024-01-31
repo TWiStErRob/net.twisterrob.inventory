@@ -2,6 +2,7 @@ package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.android
 import net.twisterrob.inventory.build.dsl.autoNamespace
+import net.twisterrob.inventory.build.dsl.libs
 
 plugins {
 	id("net.twisterrob.inventory.build.hilt")
@@ -20,12 +21,8 @@ android {
 		minSdk = 21
 	}
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_7
-		targetCompatibility = JavaVersion.VERSION_1_8
-		tasks.withType<JavaCompile>().configureEach {
-			// warning: [options] source value 7 is obsolete and will be removed in a future release
-			options.compilerArgs.add("-Xlint:-options")
-		}
+		sourceCompatibility = libs.versions.java.android.source.map(JavaVersion::toVersion).get()
+		targetCompatibility = libs.versions.java.android.target.map(JavaVersion::toVersion).get()
 	}
 	lint {
 		checkReleaseBuilds = false

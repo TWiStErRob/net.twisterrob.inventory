@@ -27,11 +27,9 @@
 			"enabled": false
 		},
 		{
-			"description": "Don't update Mockito, requires Java 11.",
+			"description": "Don't update Mockito Android, requires Java 11, and therefore minSdk 26.",
 			"matchPackageNames": [
-				"org.mockito:mockito-android",
-				"org.mockito:mockito-inline",
-				"org.mockito.kotlin:mockito-kotlin"
+				"org.mockito:mockito-android"
 			],
 			"matchUpdateTypes": "major",
 			"enabled": false
