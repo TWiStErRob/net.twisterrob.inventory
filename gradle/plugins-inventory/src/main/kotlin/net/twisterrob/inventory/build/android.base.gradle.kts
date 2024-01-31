@@ -21,8 +21,8 @@ android {
 		minSdk = 21
 	}
 	compileOptions {
-		sourceCompatibility = libs.versions.java.map(JavaVersion::toVersion).get()
-		targetCompatibility = libs.versions.java.map(JavaVersion::toVersion).get()
+		sourceCompatibility = libs.versions.java.android.source.map(JavaVersion::toVersion).get()
+		targetCompatibility = libs.versions.java.android.target.map(JavaVersion::toVersion).get()
 	}
 	lint {
 		checkReleaseBuilds = false

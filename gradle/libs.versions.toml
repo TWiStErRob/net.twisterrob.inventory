@@ -1,5 +1,6 @@
 [versions]
-java = "11"
+java-android-source = "11"
+java-android-target = "11"
 #
 agp = "8.2.2"
 # 23.0.0 + agp
