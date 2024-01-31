@@ -65,18 +65,14 @@
 		<!-- TODEL review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
-	<issue id="NewerVersionAvailable">
-		<!-- Ignore for now until Renovate is enabled. -->
-		<ignore regexp="^A newer version of org.mockito:mockito-android" />
-		<ignore regexp="^A newer version of com.google.guava:guava" />
+	<issue id="NewerVersionAvailable" severity="ignore">
+		<!-- Ignore as Renovate is enabled. -->
 	</issue>
 	<issue id="AndroidGradlePluginVersion" severity="ignore">
-		<!-- Ignore for now until Renovate is enabled. -->
+		<!-- Ignore as Renovate is enabled. -->
 	</issue>
-	<issue id="GradleDependency">
-		<!-- Ignore for now until Renovate is enabled. -->
-		<ignore regexp="^A newer version of androidx\." />
-		<ignore regexp="^A newer version of com.google.android.material:material" />
+	<issue id="GradleDependency" severity="ignore">
+		<!-- Ignore as Renovate is enabled. -->
 	</issue>
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
