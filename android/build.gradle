@@ -34,7 +34,6 @@ dependencies {
 	implementation(libs.androidx.recyclerview)
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.androidx.webkit)
-	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
 	annotationProcessor(libs.dagger.hilt.apt)
 	ksp(libs.glide.ksp)
