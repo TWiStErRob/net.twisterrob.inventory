@@ -67,7 +67,7 @@ guava = "27.0.1-jre"
 jbrAnn = "24.1.0"
 
 test-junit4 = "4.13.2"
-test-mockito = "5.10.0"
+test-mockito = "5.11.0"
 test-mockito-kotlin = "5.2.1"
 test-mockito-android = "3.12.4"
 test-robolectric = "4.11.1"
