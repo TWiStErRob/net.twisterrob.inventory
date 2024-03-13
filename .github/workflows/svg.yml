@@ -27,5 +27,5 @@ jobs:
     name: "📢 SVG Report"
     needs: instrumentation
     # The dependency job might be skipped, we don't need to run this job then.
-    if: success() || failure()
+    if: ${{ success() || failure() }}
     uses: ./.github/workflows/svg-report.yml

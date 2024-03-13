@@ -59,7 +59,7 @@ jobs:
           violationReportConsole
 
       - name: "Upload 'Lint Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Lint Results'
@@ -68,7 +68,7 @@ jobs:
             ${{ github.workspace }}/build/reports/violations.*
 
       - name: "Fail if there are violations."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         run: |
           count=$(cat "${{ github.workspace }}/build/reports/violations.count")
           if [[ "$count" != "0" ]]; then
@@ -80,7 +80,7 @@ jobs:
           fi
 
       - name: "Upload 'Detekt Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Detekt Results'
@@ -89,19 +89,19 @@ jobs:
 
       - name: "Publish 'Code scanning results / detekt' GitHub Code Scanning analysis."
         uses: github/codeql-action/upload-sarif@v3
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         with:
           sarif_file: ${{ github.workspace }}/gradle/plugins-inventory/build/reports/detekt/detekt.sarif
 
       - name: "Upload 'Unit Test Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Unit Test Results'
           path: ${{ github.workspace }}/**/build/reports/tests/*/
 
       - name: "Publish 'Unit Results' check suite."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           check_name: '🔔 Test: Unit Results'
@@ -111,7 +111,7 @@ jobs:
           junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
 
       - name: "Upload 'APKs' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'APKs'
