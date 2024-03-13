@@ -16,6 +16,10 @@ jobs:
       # github/codeql-action/upload-sarif -> https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github
       security-events: write
 
+    defaults: 
+      run:
+        shell: bash
+
     steps:
 
       - name: "Set up JDK 17."
