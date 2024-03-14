@@ -22,7 +22,11 @@ jobs:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v4
-        # TODO consider checking out just the file necessary
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            android/data/src/main/res/raw/*.svg
+            tools/svg_render/svgs.html
 
       - name: "Download 'SVG 21' artifact."
         if: ${{ success() || failure() }}
