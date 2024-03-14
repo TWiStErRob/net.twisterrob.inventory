@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
@@ -121,7 +125,7 @@ jobs:
 
           # Gather all input SVGs into a folder.
           mkdir svgs
-          cp ${{github.workspace}}/android/data/src/main/res/raw/*.svg ./svgs/
+          cp ${GITHUB_WORKSPACE}/android/data/src/main/res/raw/*.svg ./svgs/
           basename --suffix=.svg -- ./svgs/*.svg > ./svg_names.txt
 
           # Output all the wanted API levels into a file.
@@ -136,7 +140,7 @@ jobs:
         run: |
           # Get all ZIPs into a folder.
           # Glob resolution is done by shell, so can't use quotes, have to escape spaces and parentheses.
-          cp ${{github.workspace}}/downloads/SVG\ ??/android/data/svg/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/emulator-5554\ -\ */svg_??.zip ./
+          cp ${GITHUB_WORKSPACE}/downloads/SVG\ ??/android/data/svg/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/emulator-5554\ -\ */svg_??.zip ./
           # At this point we should have svg_??.zip files.
 
           # Unzip all ZIPs into separate folders.
@@ -148,6 +152,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'SVG Report'
+          if-no-files-found: error
           path: |
             svg-report/
             !svg-report/svg_??.zip

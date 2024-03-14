@@ -28,6 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'Icon Previews'
+          if-no-files-found: error
           path: |
             ${{ github.workspace }}/android/data/src/main/res/raw/icon_previews.html
             ${{ github.workspace }}/android/data/src/main/res/raw/*.svg
@@ -35,12 +36,16 @@ jobs:
 
   nu-validator:
     name: "🕵 Validate SVGs"
-    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     permissions:
       # actions/checkout
       contents: read
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
 
@@ -48,7 +53,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Register problem matchers.
-        run: echo "::add-matcher::.github/problemMatchers-icons.json"
+        run: |
+          echo "::add-matcher::.github/problemMatchers-icons.json"
 
       - name: "Validate with W3C Nu Validator"
         env:
