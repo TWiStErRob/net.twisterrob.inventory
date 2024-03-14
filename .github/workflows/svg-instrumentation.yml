@@ -17,6 +17,11 @@ jobs:
         ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages :mergeAndroidReports
 
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
+
     strategy:
       fail-fast: false
       matrix:

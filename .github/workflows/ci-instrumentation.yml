@@ -35,6 +35,11 @@ jobs:
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
         ./gradlew --no-daemon --stacktrace :mergeAndroidReports
 
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
+
     strategy:
       fail-fast: false
       matrix:
