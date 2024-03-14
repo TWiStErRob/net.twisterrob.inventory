@@ -21,7 +21,9 @@ jobs:
 
       - name: "Generate icon previews."
         working-directory: android/data/src/main/res/raw
-        run: node icon_preview.js > icon_previews.html
+        shell: bash
+        run: |
+          node icon_preview.js > icon_previews.html
 
       - name: "Upload 'Icon Previews' artifact."
         if: ${{ success() || failure() }}
