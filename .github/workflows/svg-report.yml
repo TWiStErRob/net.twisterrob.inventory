@@ -6,65 +6,79 @@ on:
 jobs:
 
   report:
-    runs-on: ubuntu-22.04
+    name: "report"
     timeout-minutes: 10
+
+    permissions:
+      # actions/checkout
+      contents: read
+
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
 
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            android/data/src/main/res/raw/*.svg
+            tools/svg_render/svgs.html
 
       - name: "Download 'SVG 21' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 21'
           path: 'downloads/SVG 21'
 
       - name: "Download 'SVG 22' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 22'
           path: 'downloads/SVG 22'
 
       - name: "Download 'SVG 23' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 23'
           path: 'downloads/SVG 23'
 
       - name: "Download 'SVG 24' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 24'
           path: 'downloads/SVG 24'
 
       - name: "Download 'SVG 25' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 25'
           path: 'downloads/SVG 25'
 
       - name: "Download 'SVG 26' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 26'
           path: 'downloads/SVG 26'
 
       - name: "Download 'SVG 27' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 27'
           path: 'downloads/SVG 27'
 
       - name: "Download 'SVG 28' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 28'
@@ -72,71 +86,71 @@ jobs:
 
       # TODO re-enable once https://github.com/ReactiveCircus/android-emulator-runner/issues/373 is resolved.
       #- name: "Download 'SVG 29' artifact."
-      #  if: success() || failure()
+      #  if: ${{ success() || failure() }}
       #  uses: actions/download-artifact@v4
       #  with:
       #    name: 'SVG 29'
       #    path: 'downloads/SVG 29'
 
       - name: "Download 'SVG 30' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 30'
           path: 'downloads/SVG 30'
 
       - name: "Download 'SVG 31' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 31'
           path: 'downloads/SVG 31'
 
       - name: "Download 'SVG 32' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 32'
           path: 'downloads/SVG 32'
 
       - name: "Download 'SVG 33' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 33'
           path: 'downloads/SVG 33'
 
       - name: "Download 'SVG 34' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/download-artifact@v4
         with:
           name: 'SVG 34'
           path: 'downloads/SVG 34'
 
       - name: "Create reporting structure."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         run: |
           mkdir svg-report
           cd svg-report
 
           # Gather all input SVGs into a folder.
           mkdir svgs
-          cp ${{github.workspace}}/android/data/src/main/res/raw/*.svg ./svgs/
+          cp ${GITHUB_WORKSPACE}/android/data/src/main/res/raw/*.svg ./svgs/
           basename --suffix=.svg -- ./svgs/*.svg > ./svg_names.txt
 
           # Output all the wanted API levels into a file.
           seq 21 34 > ./api_levels.txt
 
           # Copy report HTML to this folder.
-          cp ${{github.workspace}}/tools/svg_render/svgs.html ./index.html
+          cp ${GITHUB_WORKSPACE}/tools/svg_render/svgs.html ./index.html
 
       - name: "Aggregate svg_*.zip files."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         working-directory: svg-report
         run: |
           # Get all ZIPs into a folder.
           # Glob resolution is done by shell, so can't use quotes, have to escape spaces and parentheses.
-          cp ${{github.workspace}}/downloads/SVG\ ??/android/data/svg/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/emulator-5554\ -\ */svg_??.zip ./
+          cp ${GITHUB_WORKSPACE}/downloads/SVG\ ??/android/data/svg/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/emulator-5554\ -\ */svg_??.zip ./
           # At this point we should have svg_??.zip files.
 
           # Unzip all ZIPs into separate folders.
@@ -144,10 +158,11 @@ jobs:
           # At this point we should have svg_??/*.png files.
 
       - name: "Upload 'SVG Report' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'SVG Report'
+          if-no-files-found: error
           path: |
             svg-report/
             !svg-report/svg_??.zip

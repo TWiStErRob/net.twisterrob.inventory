@@ -16,16 +16,26 @@ jobs:
 
   validate:
     name: "🦺 Validation"
-    uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@19333c04e57739ec6074b09c6ca09c225c94dc09 # v1
+    uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@94f2ec4f96e146200f801fe7e09310c79cb2d2b3 # v2
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
   instrumentation:
     name: "🎨 Generate SVGs on" # / API ${{ matrix.api }} will be appended by used workflow.
     needs: validate
     uses: ./.github/workflows/svg-instrumentation.yml
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
 
   report:
     name: "📢 SVG Report"
     needs: instrumentation
     # The dependency job might be skipped, we don't need to run this job then.
-    if: success() || failure()
+    if: ${{ success() || failure() }}
     uses: ./.github/workflows/svg-report.yml
+    permissions:
+      contents: read

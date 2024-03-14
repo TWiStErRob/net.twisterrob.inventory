@@ -5,7 +5,7 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    name: "build"
     timeout-minutes: 30
 
     permissions:
@@ -15,6 +15,11 @@ jobs:
       checks: write
       # github/codeql-action/upload-sarif -> https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github
       security-events: write
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
 
@@ -59,18 +64,19 @@ jobs:
           violationReportConsole
 
       - name: "Upload 'Lint Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Lint Results'
+          if-no-files-found: error
           path: |
             ${{ github.workspace }}/**/build/reports/lint-results*.html
             ${{ github.workspace }}/build/reports/violations.*
 
       - name: "Fail if there are violations."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         run: |
-          count=$(cat "${{ github.workspace }}/build/reports/violations.count")
+          count=$(cat "${GITHUB_WORKSPACE}/build/reports/violations.count")
           if [[ "$count" != "0" ]]; then
             echo "::error file=config/lint/lint.xml,title=Android Lint::There were $count violations, see 'Lint Results' artifact."
             exit 1
@@ -80,41 +86,45 @@ jobs:
           fi
 
       - name: "Upload 'Detekt Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Detekt Results'
+          if-no-files-found: error
           path: |
             ${{ github.workspace }}/**/build/reports/detekt/detekt.*
 
       - name: "Publish 'Code scanning results / detekt' GitHub Code Scanning analysis."
         uses: github/codeql-action/upload-sarif@v3
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         with:
           sarif_file: ${{ github.workspace }}/gradle/plugins-inventory/build/reports/detekt/detekt.sarif
 
       - name: "Upload 'Unit Test Results' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Unit Test Results'
+          if-no-files-found: error
           path: ${{ github.workspace }}/**/build/reports/tests/*/
 
       - name: "Publish 'Unit Results' check suite."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           check_name: '🔔 Test: Unit Results'
           comment_mode: off
           report_individual_runs: true
+          action_fail_on_inconclusive: true
           test_changes_limit: 0
           junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
 
       - name: "Upload 'APKs' artifact."
-        if: success() || failure()
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: 'APKs'
+          if-no-files-found: error
           path: |
             ${{ github.workspace }}/**/build/outputs/apk/
             ${{ github.workspace }}/**/build/outputs/mapping/

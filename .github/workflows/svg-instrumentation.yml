@@ -8,7 +8,7 @@ jobs:
   instrumentation:
     name: "${{ matrix.api }}"
 
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@19333c04e57739ec6074b09c6ca09c225c94dc09 # v1
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@94f2ec4f96e146200f801fe7e09310c79cb2d2b3 # v2
     with:
       android-api: ${{ matrix.api }}
       name-artifact-fine-grained: 'SVG {0}'
@@ -16,6 +16,11 @@ jobs:
       script: |
         ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages :mergeAndroidReports
+
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
 
     strategy:
       fail-fast: false

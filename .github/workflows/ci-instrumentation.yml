@@ -8,7 +8,7 @@ jobs:
   instrumentation:
     name: "${{ matrix.api }}"
 
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@19333c04e57739ec6074b09c6ca09c225c94dc09 # v1
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@94f2ec4f96e146200f801fe7e09310c79cb2d2b3 # v2
     with:
       android-api: ${{ matrix.api }}
       timeout-minutes: 60
@@ -34,6 +34,11 @@ jobs:
         ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=net.twisterrob.android.test.SkipOnCI
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
         ./gradlew --no-daemon --stacktrace :mergeAndroidReports
+
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
 
     strategy:
       fail-fast: false
