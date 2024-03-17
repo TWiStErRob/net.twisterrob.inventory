@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 import static org.junit.Assume.assumeTrue;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
@@ -324,6 +325,7 @@ public class BackupActivityActor extends ActivityActor {
 			pressBackExternalUnsafe();
 		}
 
+		@SuppressLint("UseSdkSuppress") // REPORT false positive, the calling tests should use SdkSuppress, not utilities.
 		@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 		public void choose(int index) throws UiObjectNotFoundException {
 			String listId = UiAutomatorExtensions.androidId(ResourceTools.getIDResourceID(null, "resolver_list"));
@@ -334,6 +336,7 @@ public class BackupActivityActor extends ActivityActor {
 			AndroidAutomator.acceptAnyPermissions();
 		}
 
+		@SuppressLint("UseSdkSuppress") // REPORT false positive, the calling tests should use SdkSuppress, not utilities.
 		@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 		public DriveBackupActor chooseDrive() throws UiObjectNotFoundException, NameNotFoundException {
 			DriveBackupActor drive = new DriveBackupActor();
@@ -349,6 +352,7 @@ public class BackupActivityActor extends ActivityActor {
 		}
 	}
 
+	@SuppressLint("UseSdkSuppress") // REPORT false positive, the calling tests should use SdkSuppress, not utilities.
 	@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);

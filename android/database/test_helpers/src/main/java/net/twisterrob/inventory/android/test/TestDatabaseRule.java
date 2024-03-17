@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.content.Database;
  * It is safe to apply this rule at any time,
  * because it won't open the database until the first query on {@link #testDB}.
  */
-@VisibleForTesting
+@VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class TestDatabaseRule implements TestRule {
 	protected Database testDB;
 

@@ -26,7 +26,7 @@ import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
-@VisibleForTesting
+@VisibleForTesting(otherwise = VisibleForTesting.NONE)
 @SuppressWarnings({"unused", "TryFinallyCanBeTryWithResources"})
 public class DataBaseActor extends TestDatabaseRule {
 	private final Database appDB;
