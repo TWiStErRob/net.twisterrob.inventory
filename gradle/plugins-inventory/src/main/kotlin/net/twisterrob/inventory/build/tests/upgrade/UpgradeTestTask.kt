@@ -141,7 +141,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 			testData.instrumentationRunner.get(),
 			device
 		)
-		testData.instrumentationRunnerArguments.forEach(runner::addInstrumentationArg)
+		testData.instrumentationRunnerArguments.get().forEach(runner::addInstrumentationArg)
 		runner.addInstrumentationArg("class", test)
 		//runner.addInstrumentationArg("annotation", "org.junit.Test")
 		runner.addInstrumentationArg("upgrade", "true")
