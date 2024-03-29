@@ -15,7 +15,7 @@ glide = "4.16.0"
 androidsvg = "1.4"
 flexbox = "3.0.0"
 slf4j = "2.0.12"
-dagger = "2.51"
+dagger = "2.51.1"
 orbit = "6.1.1"
 
 androidx-activity = "1.7.2" # https://developer.android.com/jetpack/androidx/releases/activity
