@@ -27,6 +27,14 @@
 			"enabled": false
 		},
 		{
+			"description": "Don't update Protobuf major it's tightly coupled internally in AGP.",
+			"matchPackageNames": [
+				"com.google.protobuf:protobuf-java"
+			],
+			"matchUpdateTypes": ["major"],
+			"enabled": false
+		},
+		{
 			"description": "Don't update Mockito Android, requires Java 11, and therefore minSdk 26.",
 			"matchPackageNames": [
 				"org.mockito:mockito-android"
