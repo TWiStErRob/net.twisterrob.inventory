@@ -5,7 +5,7 @@ java-android-target = "11"
 agp = "8.3.2"
 # 23.0.0 + agp
 agp-tools = "31.3.2"
-twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
+twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.23.6"
 kotlin = "1.9.23"
 kotlin-ksp = "1.9.23-1.0.20"
