@@ -3,6 +3,11 @@
 
 	<!-- Used by BackupService through NotificationProgressService.startNotification(). -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+	<!-- REPORT ForegroundServicePermission false positive, my target was 33 at the moment. -->
+	<!-- Used by BackupService through NotificationProgressService.startNotification(). -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" android:minSdkVersion="34" />
+
 	<!-- Used by BackupService through NotificationProgressService.finish(). -->
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
