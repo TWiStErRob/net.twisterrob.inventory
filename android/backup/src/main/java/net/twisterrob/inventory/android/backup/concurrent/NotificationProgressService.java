@@ -5,11 +5,13 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.*;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.backup.BuildConfig;
@@ -206,11 +208,17 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return currentJobStarted != NEVER;
 	}
 
+	@SuppressLint("InlinedApi") // ServiceInfo.FOREGROUND_SERVICE_TYPE_* is safe because of ServiceCompat, but REPORT lint to AndroidX.
 	private void startNotification(@Nullable Intent intent, @Nullable Progress progress) {
 		lastProgressSentToNotification = lastProgress;
 		inBackground = true;
 		Notification notification = buildNotification(onGoingNotification, intent, progress);
-		startForeground((int)currentJobStarted + ONGOING_NOTIFICATION_OFFSET, notification);
+		ServiceCompat.startForeground(
+				this,
+				(int)currentJobStarted + ONGOING_NOTIFICATION_OFFSET,
+				notification,
+				ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+		);
 	}
 
 	protected @NonNull Notification buildNotification(
