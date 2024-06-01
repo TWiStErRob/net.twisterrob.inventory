@@ -4,7 +4,7 @@ plugins {
 
 tasks.register("clean", Delete.class) { clean ->
 	clean.dependsOn(gradle.includedBuilds*.task(":cleanFull"))
-	clean.delete(project.buildDir)
+	clean.delete(project.layout.buildDirectory)
 }
 
 tasks.register("build") { build ->
