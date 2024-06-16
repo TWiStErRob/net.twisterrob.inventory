@@ -45,28 +45,8 @@ hilt {
 //	disableCrossCompilationRootValidation = false // default (2.46.1): false
 }
 
-//val daggerFlags = mapOf(
-//	"dagger.experimentalDaggerErrorMessages" to "disabled",
-//)
-//
-//android {
-//	defaultConfig {
-//		javaCompileOptions {
-//			annotationProcessorOptions {
-//				daggerFlags.forEach { (key, value) ->
-//					argument(key, value)
-//				}
-//			}
-//		}
-//	}
-//}
-//
-//kapt {
-//	arguments {
-//		daggerFlags.forEach { (key, value) ->
-//			arg(key, value)
-//		}
-//	}
+//ksp {
+//	arg("dagger.experimentalDaggerErrorMessages" to "disabled")
 //}
 
 androidComponents.onVariants { variant ->
