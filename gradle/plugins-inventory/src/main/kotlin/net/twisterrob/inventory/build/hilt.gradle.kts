@@ -12,13 +12,13 @@ plugins {
 	id("org.gradle.java-base")
 	id("com.google.dagger.hilt.android")
 	id("org.jetbrains.kotlin.android")
-	id("org.jetbrains.kotlin.kapt")
+	id("com.google.devtools.ksp")
 	id("org.gradle.idea")
 }
 
 dependencies {
 	"implementation"(libs.dagger.hilt)
-	"kapt"(libs.dagger.hilt.apt)
+	"ksp"(libs.dagger.hilt.apt)
 }
 
 tasks.withType<JavaCompile>().configureEach javac@{
