@@ -12,8 +12,12 @@ plugins {
 	id("org.gradle.java-base")
 	id("com.google.dagger.hilt.android")
 	id("org.jetbrains.kotlin.android")
-	id("com.google.devtools.ksp")
 	id("org.gradle.idea")
+}
+
+plugins.withId("com.android.base") {
+	// REPORT ordering matters, this has to be after AGP.
+	plugins.apply("com.google.devtools.ksp")
 }
 
 dependencies {
