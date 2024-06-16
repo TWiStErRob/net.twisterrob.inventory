@@ -35,7 +35,7 @@ dependencies {
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.androidx.webkit)
 	implementation(libs.slf4j.api)
-	annotationProcessor(libs.dagger.hilt.apt)
+	ksp(libs.dagger.hilt.apt)
 	ksp(libs.glide.ksp)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
