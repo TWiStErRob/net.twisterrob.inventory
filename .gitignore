@@ -6,6 +6,8 @@
 /*/*/build/
 /*/*/*/build/
 /gradled.bat
+# Kotlin
+.kotlin/
 
 # IntelliJ IDEA / Android Studio
 *.iml
