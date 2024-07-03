@@ -3,7 +3,6 @@ plugins {
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.upgradeTest")
 	id("net.twisterrob.inventory.build.tests.instrumentation")
-	id("com.google.devtools.ksp")
 }
 
 dependencies {
@@ -35,7 +34,6 @@ dependencies {
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.androidx.webkit)
 	implementation(libs.slf4j.api)
-	annotationProcessor(libs.dagger.hilt.apt)
 	ksp(libs.glide.ksp)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)

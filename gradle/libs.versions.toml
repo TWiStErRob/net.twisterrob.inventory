@@ -2,13 +2,13 @@
 java-android-source = "11"
 java-android-target = "11"
 #
-agp = "8.4.1"
+agp = "8.5.0"
 # 23.0.0 + agp
-agp-tools = "31.4.1"
+agp-tools = "31.5.0"
 twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.23.6"
-kotlin = "1.9.24"
-kotlin-ksp = "1.9.24-1.0.20"
+kotlin = "2.0.0"
+kotlin-ksp = "2.0.0-1.0.22"
 kotlin-coroutines = "1.8.1"
 
 glide = "4.16.0"
@@ -61,7 +61,7 @@ androidx-test-runner = "1.5.2" # https://developer.android.com/jetpack/androidx/
 androidx-test-espresso = "3.5.1" # https://developer.android.com/jetpack/androidx/releases/test
 
 xalan = "2.7.3"
-saxon = "12.4"
+saxon = "12.5"
 javaxInject = "1"
 guava = "27.0.1-jre"
 jbrAnn = "24.1.0"

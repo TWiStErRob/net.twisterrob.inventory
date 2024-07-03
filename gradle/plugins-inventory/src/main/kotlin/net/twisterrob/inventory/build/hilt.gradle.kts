@@ -12,13 +12,17 @@ plugins {
 	id("org.gradle.java-base")
 	id("com.google.dagger.hilt.android")
 	id("org.jetbrains.kotlin.android")
-	id("org.jetbrains.kotlin.kapt")
 	id("org.gradle.idea")
+}
+
+plugins.withId("com.android.base") {
+	// REPORT ordering matters, this has to be after AGP.
+	plugins.apply("com.google.devtools.ksp")
 }
 
 dependencies {
 	"implementation"(libs.dagger.hilt)
-	"kapt"(libs.dagger.hilt.apt)
+	"ksp"(libs.dagger.hilt.apt)
 }
 
 tasks.withType<JavaCompile>().configureEach javac@{
@@ -41,28 +45,8 @@ hilt {
 //	disableCrossCompilationRootValidation = false // default (2.46.1): false
 }
 
-//val daggerFlags = mapOf(
-//	"dagger.experimentalDaggerErrorMessages" to "disabled",
-//)
-//
-//android {
-//	defaultConfig {
-//		javaCompileOptions {
-//			annotationProcessorOptions {
-//				daggerFlags.forEach { (key, value) ->
-//					argument(key, value)
-//				}
-//			}
-//		}
-//	}
-//}
-//
-//kapt {
-//	arguments {
-//		daggerFlags.forEach { (key, value) ->
-//			arg(key, value)
-//		}
-//	}
+//ksp {
+//	arg("dagger.experimentalDaggerErrorMessages" to "disabled")
 //}
 
 androidComponents.onVariants { variant ->
