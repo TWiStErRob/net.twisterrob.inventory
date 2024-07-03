@@ -28,7 +28,7 @@ def gradleVersion = GradleVersion.current().version
 
 // TODEL KGP 1.9.23 build on Gradle 8.8-rc-1 https://youtrack.jetbrains.com/issue/KT-67838 target fix 2.0.20.
 def kgpVersion = libs.plugins.kotlin.get().version.requiredVersion
-if (kgpVersion == "1.9.24") {
+if (kgpVersion == "2.0.0") {
 	doNotNagAbout(
 			"The Configuration.fileCollection(Spec) method has been deprecated. " +
 					"This is scheduled to be removed in Gradle 9.0. " +
