@@ -1,10 +1,13 @@
+import static net.twisterrob.inventory.build.dsl.IsCIKt.CI
+import static net.twisterrob.gradle.GradleUtils.doNotNagAbout 
+
 plugins {
 	id("net.twisterrob.inventory.root")
 }
 
 tasks.register("clean", Delete.class) { clean ->
 	clean.dependsOn(gradle.includedBuilds*.task(":cleanFull"))
-	clean.delete(project.buildDir)
+	clean.delete(project.layout.buildDirectory)
 }
 
 tasks.register("build") { build ->
@@ -19,6 +22,24 @@ idea {
 				rootProject.file("android/src/main/future"),
 		]
 	}
+}
+
+def gradleVersion = GradleVersion.current().version
+
+// TODEL KGP 1.9.23 build on Gradle 8.8-rc-1 https://youtrack.jetbrains.com/issue/KT-67838 target fix 2.0.20.
+def kgpVersion = libs.plugins.kotlin.get().version.requiredVersion
+if (kgpVersion == "2.0.0") {
+	doNotNagAbout(
+			"The Configuration.fileCollection(Spec) method has been deprecated. " +
+					"This is scheduled to be removed in Gradle 9.0. " +
+					"Use Configuration.getIncoming().artifactView(Action) with a componentFilter instead. " +
+					"Consult the upgrading guide for further information: " +
+					"https://docs.gradle.org/${gradleVersion}/userguide/upgrading_version_8.html#deprecate_filtered_configuration_file_and_filecollection_methods",
+			"at org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin\$createKaptKotlinTask\$2.invoke(Kapt3KotlinGradleSubplugin.kt:422)"
+	)
+} else {
+	def error = CI ? { throw new IllegalStateException(it) } : logger::warn
+	error("KGP version (${kgpVersion}) changed, please review hack.")
 }
 
 // TODEL https://issuetracker.google.com/issues/222730176
