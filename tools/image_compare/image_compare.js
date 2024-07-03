@@ -1,7 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const PNG = require('pngjs').PNG;
-const pixelmatch = require('pixelmatch');
+import fs from 'node:fs';
+import url from 'node:url';
+import path from 'node:path';
+import { PNG } from 'pngjs';
+import pixelmatch from 'pixelmatch';
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const base = __dirname;
 
 if (process.argv.length < 1 + 1 + 3) {
