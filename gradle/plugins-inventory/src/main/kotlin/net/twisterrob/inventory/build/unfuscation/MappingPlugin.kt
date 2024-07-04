@@ -10,7 +10,6 @@ import net.twisterrob.inventory.build.dsl.android
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
@@ -42,7 +41,7 @@ class MappingPlugin : Plugin<Project> {
 			}
 
 			val obfuscateTask: TaskProvider<R8Task> =
-				project.tasks.named<R8Task>("minify${variant.name.capitalized()}WithR8")
+				project.tasks.named<R8Task>("minify${variant.name.replaceFirstChar(Char::uppercase)}WithR8")
 			val unfuscateTask =
 				project.tasks.register<UnfuscateTask>("${obfuscateTask.name}Unfuscate") {
 					this.obfuscateTask.set(obfuscateTask)

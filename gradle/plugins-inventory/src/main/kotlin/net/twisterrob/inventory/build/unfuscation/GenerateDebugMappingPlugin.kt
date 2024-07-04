@@ -6,7 +6,6 @@ import com.android.build.gradle.internal.tasks.R8Task
 import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.named
 import java.io.File
 import java.io.FileInputStream
@@ -26,7 +25,7 @@ class GenerateDebugMappingPlugin : Plugin<Project> {
 				.asFile
 			val newMapping = mapping.parentFile.resolve(mapping.name + ".gen")
 			val r8Provider = project.tasks
-				.named<R8Task>("minify${variant.name.capitalized()}WithR8")
+				.named<R8Task>("minify${variant.name.replaceFirstChar(Char::uppercase)}WithR8")
 			val generateDebugMapping = project.tasks.register("generateDebugMapping") {
 				this.description = "Generate mapping.txt for readable output"
 				this.outputs.files(newMapping)
