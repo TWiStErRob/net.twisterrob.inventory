@@ -4,7 +4,6 @@ import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.container
 import org.gradle.kotlin.dsl.register
 
@@ -34,7 +33,7 @@ class InventoryDatabasePlugin : Plugin<Project> {
 		val allTasksClean = project.tasks.register("cleanGenerateDataBase")
 		entities.configureEach {
 			val entity: InventoryDatabaseEntity = this
-			val taskName = "generateDataBase${entity.name.capitalized()}"
+			val taskName = "generateDataBase${entity.name.replaceFirstChar(Char::uppercase)}"
 			val transformation = "(${entity.input} --${entity.conversion}--> ${entity.assetPath}"
 			project.logger.debug("Creating task ${taskName} for ${entity.name}: ${transformation})")
 			val task = project.tasks.register<InventoryDatabaseTask>(taskName) {
@@ -45,7 +44,7 @@ class InventoryDatabasePlugin : Plugin<Project> {
 			}
 			allTasks.configure { dependsOn(task) }
 			// clean task is automagically generated for every task that has output
-			allTasksClean.configure { dependsOn("clean${task.name.capitalized()}") }
+			allTasksClean.configure { dependsOn("clean${task.name.replaceFirstChar(Char::uppercase)}") }
 			project.androidComponents.onVariants { variant ->
 				variant.sources.assets!!
 					.addGeneratedSourceDirectory(task, InventoryDatabaseTask::output)
