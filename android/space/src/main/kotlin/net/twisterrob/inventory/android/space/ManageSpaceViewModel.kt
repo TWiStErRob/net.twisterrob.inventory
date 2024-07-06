@@ -14,10 +14,7 @@ import net.twisterrob.inventory.android.space.manager.InventorySpaceManager
 import net.twisterrob.inventory.android.space.sizes.GetSizesUseCase
 import net.twisterrob.inventory.android.space.sizes.SizesDomainToStateMapper
 import net.twisterrob.inventory.android.viewmodel.OrbitViewModel
-import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
-import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.syntax.Syntax
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -238,7 +235,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			)
 		}
 
-	context(SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>)
+	context(Syntax<ManageSpaceUiState, ManageSpaceUiEffect>)
 	private suspend fun confirmedClean(
 		title: CharSequence,
 		message: CharSequence,
@@ -267,7 +264,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	context(SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>)
+	context(Syntax<ManageSpaceUiState, ManageSpaceUiEffect>)
 	private suspend fun unconfirmedClean(
 		progress: (SizesUiState) -> SizesUiState,
 		action: suspend () -> Unit,
