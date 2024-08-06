@@ -1,46 +1,48 @@
 {
-	$schema: "https://docs.renovatebot.com/renovate-schema.json",
+	$schema: 'https://docs.renovatebot.com/renovate-schema.json',
 	extends: [
-		"local>TWiStErRob/renovate-config"
+		'local>TWiStErRob/renovate-config',
 	],
 	packageRules: [
 		{
 			description: "Don't update Gradle versions yet, it's a complex build.",
 			matchPackageNames: [
-				"gradle"
+				'gradle',
 			],
 			dependencyDashboardApproval: true,
 		},
 		{
 			description: "Don't update AndroidX packages yet.",
-			matchPackagePrefixes: [
-				"androidx.",
-				"com.google.android.material:"
-			],
 			dependencyDashboardApproval: true,
+			matchPackageNames: [
+				'androidx.{/,}**',
+				'com.google.android.material:{/,}**',
+			],
 		},
 		{
 			description: "Don't update Guava.",
 			matchPackageNames: [
-				"com.google.guava:guava"
+				'com.google.guava:guava',
 			],
 			dependencyDashboardApproval: true,
 		},
 		{
 			description: "Don't update Protobuf major it's tightly coupled internally in AGP.",
 			matchPackageNames: [
-				"com.google.protobuf:protobuf-java"
+				'com.google.protobuf:protobuf-java',
 			],
-			matchUpdateTypes: ["major"],
+			matchUpdateTypes: [
+				'major',
+			],
 			dependencyDashboardApproval: true,
 		},
 		{
 			description: "Don't update Mockito Android, requires Java 11, and therefore minSdk 26.",
 			matchPackageNames: [
-				"org.mockito:mockito-android"
+				'org.mockito:mockito-android',
 			],
-			matchUpdateTypes: "major",
+			matchUpdateTypes: 'major',
 			dependencyDashboardApproval: true,
-		}
-	]
+		},
+	],
 }
