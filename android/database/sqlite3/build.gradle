@@ -18,7 +18,7 @@ configurations {
 }
 
 dependencies {
-	antlr("org.antlr:antlr4:4.13.1")
+	antlr("org.antlr:antlr4:4.13.2")
 	// https://github.com/antlr/grammars-v4/blob/main/sql/sqlite/SQLiteLexer.g4
 	grammars("antlr/grammars-v4:sql/sqlite/SQLiteLexer:3a73a199cc31fb600c5d7b0f141cedd168933e20@g4")
 	grammars("antlr/grammars-v4:sql/sqlite/SQLiteParser:3a73a199cc31fb600c5d7b0f141cedd168933e20@g4")
