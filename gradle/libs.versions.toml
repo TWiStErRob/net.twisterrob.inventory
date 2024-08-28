@@ -2,7 +2,7 @@
 java-android-source = "11"
 java-android-target = "11"
 #
-agp = "8.5.0"
+agp = "8.5.2"
 # 23.0.0 + agp
 agp-tools = "31.5.2"
 twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
