@@ -66,7 +66,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 
 		val services = debugVariant.services
 
-		val results = services.projectInfo.getTestResultsFolder()!!.resolve("upgrade-tests")
+		val results = services.projectInfo.getTestResultsFolder().get().dir("upgrade-tests").asFile
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
@@ -75,7 +75,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 			setReportDir(results)
 		}
 
-		val reports = services.projectInfo.getReportsDir().resolve("upgrade-tests")
+		val reports = services.projectInfo.getReportsDir().get().dir("upgrade-tests").asFile
 			.also { FileUtils.cleanOutputDir(it) }
 
 		var finished = false
