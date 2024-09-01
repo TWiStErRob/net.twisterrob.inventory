@@ -178,8 +178,7 @@ class ManageSpaceViewModelTest {
 		}
 	}
 
-	context(OrbitTestContext<ManageSpaceUiState, *, *>)
-		private suspend fun expectReload(loading: SizesUiState, model: SizesUiState) {
+	private suspend fun OrbitTestContext<ManageSpaceUiState, *, *>.expectReload(loading: SizesUiState, model: SizesUiState) {
 		expectState { copy(isLoading = true, sizes = loading) }
 		expectState { copy(isLoading = false, sizes = model) }
 	}

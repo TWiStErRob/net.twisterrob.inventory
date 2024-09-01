@@ -235,8 +235,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			)
 		}
 
-	context(Syntax<ManageSpaceUiState, ManageSpaceUiEffect>)
-	private suspend fun confirmedClean(
+	private suspend fun Syntax<ManageSpaceUiState, ManageSpaceUiEffect>.confirmedClean(
 		title: CharSequence,
 		message: CharSequence,
 		progress: (SizesUiState) -> SizesUiState,
@@ -264,8 +263,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	context(Syntax<ManageSpaceUiState, ManageSpaceUiEffect>)
-	private suspend fun unconfirmedClean(
+	private suspend fun Syntax<ManageSpaceUiState, ManageSpaceUiEffect>.unconfirmedClean(
 		progress: (SizesUiState) -> SizesUiState,
 		action: suspend () -> Unit,
 	) {
