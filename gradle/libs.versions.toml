@@ -8,7 +8,7 @@ agp-tools = "31.6.0"
 twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.23.6"
 kotlin = "2.0.20"
-kotlin-ksp = "2.0.20-1.0.24"
+kotlin-ksp = "2.0.20-1.0.25"
 kotlin-coroutines = "1.8.1"
 
 glide = "4.16.0"
