@@ -41,7 +41,6 @@ androidx-lifecycle = "2.6.2" # https://developer.android.com/jetpack/androidx/re
 androidx-loader = "1.1.0" # https://developer.android.com/jetpack/androidx/releases/loader
 androidx-localbroadcastmanager = "1.1.0" # https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
 androidx-material = "1.9.0" # https://github.com/material-components/material-components-android/releases
-androidx-multidex = "2.0.1" # https://developer.android.com/jetpack/androidx/releases/multidex
 androidx-preference = "1.2.1" # https://developer.android.com/jetpack/androidx/releases/preference
 androidx-print = "1.0.0" # https://developer.android.com/jetpack/androidx/releases/print
 androidx-recyclerview = "1.3.1" # https://developer.android.com/jetpack/androidx/releases/recyclerview
@@ -122,7 +121,6 @@ androidx-lifecycleViewModel = { module = "androidx.lifecycle:lifecycle-viewmodel
 androidx-loader = { module = "androidx.loader:loader", version.ref = "androidx-loader" }
 androidx-localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "androidx-localbroadcastmanager" }
 androidx-material = { module = "com.google.android.material:material", version.ref = "androidx-material" }
-androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "androidx-multidex" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
 androidx-print = { module = "androidx.print:print", version.ref = "androidx-print" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recyclerview" }
@@ -160,7 +158,6 @@ test-mockito = { module = "org.mockito:mockito-core", version.ref = "test-mockit
 test-mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "test-mockito-kotlin" }
 test-mockitoAndroid = { module = "org.mockito:mockito-android", version.ref = "test-mockito-android" }
 test-robolectric = { module = "org.robolectric:robolectric", version.ref = "test-robolectric" }
-test-robolectricMultidexShadows = { module = "org.robolectric:shadows-multidex", version.ref = "test-robolectric" }
 # Gwen.given, Gwen.when, Gwen.then
 test-gwen = { module = "com.shazam:gwen", version.ref = "test-gwen" }
 test-durian = { module = "com.diffplug.durian:durian", version.ref = "test-durian" }

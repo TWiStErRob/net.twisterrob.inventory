@@ -49,7 +49,6 @@ dependencies {
 	testImplementation 'net.twisterrob.lib:twister-lib-hamcrest'
 	testImplementation 'net.twisterrob.lib:twister-lib-mockito'
 	testImplementation(libs.test.robolectric)
-	testImplementation(libs.test.robolectricMultidexShadows)
 	testImplementation(libs.androidx.test.core)
 	testRuntimeOnly(libs.slf4j.simple)
 

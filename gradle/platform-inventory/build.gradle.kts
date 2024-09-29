@@ -26,7 +26,6 @@ dependencies {
 		androidxTest.forEach { api(libsVC.findLibrary(it).get()) }
 
 		api(libs.test.robolectric)
-		api(libs.test.robolectricMultidexShadows)
 	}
 }
 
