@@ -1,5 +1,4 @@
 import org.gradle.api.initialization.resolve.RepositoriesMode
-import static net.twisterrob.gradle.GradleUtils.doNotNagAbout
 
 pluginManagement {
 	includeBuild("gradle/plugins-inventory")
@@ -72,29 +71,4 @@ develocity {
 		termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
 		termsOfUseAgree = "yes"
 	}
-}
-
-def gradleVersion = GradleVersion.current().version
-
-// TODEL Gradle 8.8 sync in IDEA 2024.1.4 https://youtrack.jetbrains.com/issue/IDEA-353787.
-if ((System.getProperty("idea.version") ?: "") < "2024.2") {
-	doNotNagAbout(
-			"The CopyProcessingSpec.getFileMode() method has been deprecated. " +
-					"This is scheduled to be removed in Gradle 9.0. " +
-					"Please use the getFilePermissions() method instead. " +
-					"Consult the upgrading guide for further information: " +
-					"https://docs.gradle.org/${gradleVersion}/userguide/upgrading_version_8.html#unix_file_permissions_deprecated",
-			"at com.intellij.gradle.toolingExtension.impl.model.resourceFilterModel.GradleResourceFilterModelBuilder.getFilters(GradleResourceFilterModelBuilder.groovy:46)"
-	)
-	doNotNagAbout(
-			"The CopyProcessingSpec.getDirMode() method has been deprecated. " +
-					"This is scheduled to be removed in Gradle 9.0. " +
-					"Please use the getDirPermissions() method instead. " +
-					"Consult the upgrading guide for further information: " +
-					"https://docs.gradle.org/${gradleVersion}/userguide/upgrading_version_8.html#unix_file_permissions_deprecated",
-			"at com.intellij.gradle.toolingExtension.impl.model.resourceFilterModel.GradleResourceFilterModelBuilder.getFilters(GradleResourceFilterModelBuilder.groovy:46)"
-	)
-} else {
-	def error = CI ? { throw new IllegalStateException(it) } : logger::warn
-	error("IDEA version changed, please review hack.")
 }

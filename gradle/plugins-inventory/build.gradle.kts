@@ -49,8 +49,8 @@ dependencies {
 	testImplementation(libs.test.junit4)
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-	kotlinOptions {
+kotlin {
+	compilerOptions {
 		allWarningsAsErrors = true
 	}
 }
