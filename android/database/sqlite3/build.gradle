@@ -11,9 +11,9 @@ repositories {
 
 configurations {
 	register("grammars") {
-		canBeConsumed(false)
-		canBeDeclared(true)
-		canBeResolved(true)
+		canBeConsumed = false
+		canBeDeclared = true
+		canBeResolved = true
 	}
 }
 
