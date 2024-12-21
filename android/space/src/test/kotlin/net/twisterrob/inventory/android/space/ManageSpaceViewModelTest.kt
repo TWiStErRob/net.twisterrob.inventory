@@ -11,6 +11,7 @@ import net.twisterrob.inventory.android.space.sizes.SizesDomain
 import net.twisterrob.inventory.android.space.sizes.SizesDomainToStateMapper
 import net.twisterrob.java.utils.ReflectionTools
 import net.twisterrob.test.TestRuntimeException
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
@@ -26,6 +27,9 @@ class ManageSpaceViewModelTest {
 	private val mockUseCase: GetSizesUseCase = mock()
 	private val mockMapper: SizesDomainToStateMapper = mock()
 	private val mockManager: InventorySpaceManager = mock()
+
+	@get:Rule
+	val mainDispatcherRule = MainDispatcherRule()
 
 	@Test
 	fun `load sizes - success`() = runTest {
