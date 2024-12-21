@@ -110,7 +110,7 @@ android {
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
 		ignoreAssetsPattern = defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
-	sourceSets.test.java.srcDir 'src/test/robolectricJava'
+	sourceSets.test.java.srcDir("src/test/robolectricJava")
 }
 
 //noinspection UnnecessaryQualifiedReference
