@@ -16,7 +16,7 @@ jobs:
       # github/codeql-action/upload-sarif -> https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github
       security-events: write
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
