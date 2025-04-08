@@ -9,7 +9,7 @@ twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releas
 detekt = "1.23.8"
 kotlin = "2.1.20"
 kotlin-ksp = "2.1.20-1.0.32"
-kotlin-coroutines = "1.10.1"
+kotlin-coroutines = "1.10.2"
 
 glide = "4.16.0"
 androidsvg = "1.4"
