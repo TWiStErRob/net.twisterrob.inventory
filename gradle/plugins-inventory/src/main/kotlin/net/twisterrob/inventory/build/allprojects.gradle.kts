@@ -38,14 +38,6 @@ tasks.withType<JavaCompile>().configureEach javac@{
 		"-Xlint:all",
 		// Fail build when any warning pops up.
 		"-Werror",
-		// TODEL https://issuetracker.google.com/issues/359561906
-		// > > Task :android:database-contract:compileDebugJavaWithJavac FAILED
-		// > /modules/java.base/java/lang/List.class:
-		// > /modules/java.base/java/util/Collections.class:
-		// > /modules/java.base/java/lang/Double.class:
-		// > warning: Cannot find annotation method 'value()' in type 'FlaggedApi':
-		// > class file for android.annotation.FlaggedApi not found
-		"-Xlint:-classfile",
 	)
 
 	if (this@javac.name.endsWith("UnitTestJavaWithJavac")
