@@ -1,6 +1,5 @@
 package net.twisterrob.test.android;
 
-import java.io.Serializable;
 import java.util.*;
 
 import android.os.Build.*;
@@ -76,13 +75,13 @@ public class BundleFactory {
 	public static Bundle otherLists() {
 		Bundle b = new Bundle();
 		b.putIntegerArrayList("IntegerArrayList", new ArrayList<>(Arrays.asList(1, 2, 3)));
-		b.putParcelableArrayList("ParcelableArrayList", BundleFactory.<ArrayList<Parcelable>>TODO());
-		b.putSparseParcelableArray("SparseParcelableArray", BundleFactory.<SparseArray<Parcelable>>TODO());
+		b.putParcelableArrayList("ParcelableArrayList", BundleFactory.TODO());
+		b.putSparseParcelableArray("SparseParcelableArray", BundleFactory.TODO());
 		return b;
 	}
 	public static Bundle otherArrays() {
 		Bundle b = new Bundle();
-		b.putParcelableArray("ParcelableArray", BundleFactory.<Parcelable[]>TODO());
+		b.putParcelableArray("ParcelableArray", BundleFactory.TODO());
 		return b;
 	}
 	public static Bundle stringArrays() {
@@ -114,10 +113,10 @@ public class BundleFactory {
 		}
 
 		if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
-			b.putBinder("Binder", BundleFactory.<IBinder>TODO());
+			b.putBinder("Binder", BundleFactory.TODO());
 		}
-		b.putSerializable("Serializable", BundleFactory.<Serializable>TODO());
-		b.putParcelable("Parcelable", BundleFactory.<Parcelable>TODO());
+		b.putSerializable("Serializable", BundleFactory.TODO());
+		b.putParcelable("Parcelable", BundleFactory.TODO());
 
 		b.putBundle("Bundle", new Bundle());
 		return b;
