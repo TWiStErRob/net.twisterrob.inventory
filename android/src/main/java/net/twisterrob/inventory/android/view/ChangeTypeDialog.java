@@ -2,11 +2,9 @@ package net.twisterrob.inventory.android.view;
 
 import android.animation.*;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Build.*;
 import android.os.*;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -36,7 +34,7 @@ public class ChangeTypeDialog {
 	private final @NonNull Context context;
 	private ListView list;
 	private @NonNull Drawable spinner;
-	private Animator spinnerAnim;
+	private @Nullable Animator spinnerAnim;
 
 	public ChangeTypeDialog(@NonNull BaseFragment<?> fragment) {
 		this.fragment = fragment;
@@ -45,24 +43,21 @@ public class ChangeTypeDialog {
 		initSpinner();
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void initSpinner() {
 		spinner = ContextCompat.getDrawable(context, R.drawable.spinner);
 		spinner.setColorFilter(Constants.Pic.tint());
-		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+		if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
 			spinnerAnim = ObjectAnimator.ofInt(spinner, "level", 0, 10000);
 			((ValueAnimator)spinnerAnim).setRepeatCount(ObjectAnimator.INFINITE);
 		}
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void startShowLoading() {
 		if (spinnerAnim != null) {
 			spinnerAnim.start();
 		}
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void finishShowLoading() {
 		if (spinnerAnim != null) {
 			spinnerAnim.end();
@@ -152,7 +147,6 @@ public class ChangeTypeDialog {
 		// Delay things, so that ListView has time to lay out the new Adapter
 		// if it was just set in the same frame as this call.
 		list.post(new Runnable() {
-			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {
 				if (offset < list.getHeight()) {
 					float scale = Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f);

@@ -6,14 +6,12 @@ import javax.inject.Inject;
 
 import org.slf4j.*;
 
-import android.annotation.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
@@ -245,7 +243,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 		final ImageButton help = view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
-			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onClick(View v) {
 				PopupMenu popup = new PopupMenu(v.getContext(), v);
 				onPrepareContextMenu(popup.getMenu(), popup.getMenuInflater());
@@ -288,7 +285,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 	}
 
-	@SuppressLint("WrongViewCast")
 	private static ImageView getTypeImageView(@NonNull View view) {
 		// REPORT false positive, sees TextView in activity_move.xml,
 		// but in reality it's loading fragment_edit.xml > inc_details_image.xml > @id/type (defined in ids.xml).
@@ -487,7 +483,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return cursor != null? ImagedDTO.getFallbackID(requireContext(), cursor) : R.raw.category_unknown;
 	}
 
-	@SuppressLint("WrongThreadInterprocedural")
 	private class ItemEditVariants extends Variants {
 		@Override protected void update(Cursor cursor) {
 			AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
