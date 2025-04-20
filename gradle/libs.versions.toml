@@ -2,14 +2,14 @@
 java-android-source = "11"
 java-android-target = "11"
 #
-agp = "8.7.3"
+agp = "8.8.1"
 # 23.0.0 + agp
-agp-tools = "31.7.3"
-twisterrob = "0.17" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
-detekt = "1.23.7"
-kotlin = "2.1.0"
-kotlin-ksp = "2.1.0-1.0.29"
-kotlin-coroutines = "1.10.1"
+agp-tools = "31.8.1"
+twisterrob = "0.18" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
+detekt = "1.23.8"
+kotlin = "2.1.20"
+kotlin-ksp = "2.1.20-2.0.0"
+kotlin-coroutines = "1.10.2"
 
 glide = "4.16.0"
 androidsvg = "1.4"
@@ -63,10 +63,10 @@ xalan = "2.7.3"
 saxon = "12.5"
 javaxInject = "1"
 guava = "27.0.1-jre"
-jbrAnn = "26.0.1"
+jbrAnn = "26.0.2"
 
 test-junit4 = "4.13.2"
-test-mockito = "5.15.2"
+test-mockito = "5.17.0"
 test-mockito-kotlin = "5.4.0"
 test-mockito-android = "3.12.4"
 test-robolectric = "4.14.1"
