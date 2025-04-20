@@ -35,7 +35,7 @@ public class ChangeTypeDialog {
 	private final @NonNull Context context;
 	private ListView list;
 	private @NonNull Drawable spinner;
-	private Animator spinnerAnim;
+	private @Nullable Animator spinnerAnim;
 
 	public ChangeTypeDialog(@NonNull BaseFragment<?> fragment) {
 		this.fragment = fragment;
