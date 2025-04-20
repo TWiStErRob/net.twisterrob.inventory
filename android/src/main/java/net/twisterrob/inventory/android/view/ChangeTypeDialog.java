@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Build.*;
 import android.os.*;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -47,7 +46,7 @@ public class ChangeTypeDialog {
 	private void initSpinner() {
 		spinner = ContextCompat.getDrawable(context, R.drawable.spinner);
 		spinner.setColorFilter(Constants.Pic.tint());
-		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+		if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
 			spinnerAnim = ObjectAnimator.ofInt(spinner, "level", 0, 10000);
 			((ValueAnimator)spinnerAnim).setRepeatCount(ObjectAnimator.INFINITE);
 		}

@@ -2,7 +2,6 @@ package net.twisterrob.test.android;
 
 import java.util.*;
 
-import android.os.Build.*;
 import android.os.*;
 import android.util.*;
 
@@ -107,12 +106,12 @@ public class BundleFactory {
 
 	public static Bundle objects() {
 		Bundle b = new Bundle();
-		if (VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT) {
+		if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
 			b.putSize("Size", new Size(1, 2));
 			b.putSizeF("SizeF", new SizeF(1, 2));
 		}
 
-		if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
+		if (Build.VERSION_CODES.JELLY_BEAN_MR2 <= Build.VERSION.SDK_INT) {
 			b.putBinder("Binder", BundleFactory.TODO());
 		}
 		b.putSerializable("Serializable", BundleFactory.TODO());

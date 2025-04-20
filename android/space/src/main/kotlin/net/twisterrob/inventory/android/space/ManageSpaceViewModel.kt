@@ -1,8 +1,6 @@
 package net.twisterrob.inventory.android.space
 
-import android.annotation.TargetApi
 import android.net.Uri
-import android.os.Build.VERSION_CODES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
