@@ -9,18 +9,18 @@ fun stringifySQLiteStatements(parsed: SQLiteParser.ParseContext): List<String> =
 		.sql_stmt_list()
 		.single()
 		.sql_stmt()
-		.map { statement ->
-			statement.accept(object : AbstractParseTreeVisitor<String>() {
-				override fun defaultResult(): String =
-					""
+		.map { it.accept(JoinToString) }
 
-				override fun aggregateResult(aggregate: String, nextResult: String): String =
-					"${aggregate} ${nextResult}"
+private object JoinToString : AbstractParseTreeVisitor<String>() {
+	override fun defaultResult(): String =
+		""
 
-				override fun visitTerminal(node: TerminalNode): String =
-					when (node.symbol.type) {
-						SQLiteParser.SCOL -> ";\n"
-						else -> node.symbol.text
-					}
-			})
+	override fun aggregateResult(aggregate: String, nextResult: String): String =
+		"${aggregate} ${nextResult}"
+
+	override fun visitTerminal(node: TerminalNode): String =
+		when (node.symbol.type) {
+			SQLiteParser.SCOL -> ";\n"
+			else -> node.symbol.text
 		}
+}
