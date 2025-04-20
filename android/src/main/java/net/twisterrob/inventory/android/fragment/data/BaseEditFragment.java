@@ -285,7 +285,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 	}
 
-	@SuppressLint("WrongViewCast")
 	private static ImageView getTypeImageView(@NonNull View view) {
 		// REPORT false positive, sees TextView in activity_move.xml,
 		// but in reality it's loading fragment_edit.xml > inc_details_image.xml > @id/type (defined in ids.xml).
@@ -484,7 +483,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return cursor != null? ImagedDTO.getFallbackID(requireContext(), cursor) : R.raw.category_unknown;
 	}
 
-	@SuppressLint("WrongThreadInterprocedural")
 	private class ItemEditVariants extends Variants {
 		@Override protected void update(Cursor cursor) {
 			AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));

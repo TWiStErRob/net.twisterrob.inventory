@@ -94,17 +94,6 @@
 		<ignore regexp="^Invalid package reference in org\.mockito:mockito-core; not included in Android: `java\.lang\.instrument`\. Referenced from `org\.mockito\.internal\.PremainAttach`\.$" />
 
 	</issue>
-	<issue id="MissingClass">
-		<!-- REPORT false positive: internal library stuff is not picked up. -->
-		<ignore regexp="net\.twisterrob\.android\." />
-	</issue>
-	<issue id="Instantiatable" severity="ignore">
-		<!-- REPORT false positive for all my classes. -->
-	</issue>
-	<issue id="MissingSuperCall">
-		<!-- REPORT False positive in AGP 4.1.1, @SuppressLint("MissingSuperCall") doesn't work, baseline doesn't work. -->
-		<ignore path="src/main/java/net/twisterrob/inventory/android/activity/space/ManageSpaceActivity.java" />
-	</issue>
 	<issue id="LintBaseline">
 		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
 	</issue>
