@@ -181,7 +181,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 			}
 		}
 
-	@TargetApi(VERSION_CODES.KITKAT)
 	fun clearData() =
 		intent {
 			confirmedClean(

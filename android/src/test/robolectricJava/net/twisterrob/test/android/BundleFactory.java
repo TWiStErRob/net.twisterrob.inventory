@@ -3,7 +3,6 @@ package net.twisterrob.test.android;
 import java.io.Serializable;
 import java.util.*;
 
-import android.annotation.TargetApi;
 import android.os.Build.*;
 import android.os.*;
 import android.util.*;
@@ -107,7 +106,6 @@ public class BundleFactory {
 		return b;
 	}
 
-	@TargetApi(VERSION_CODES.LOLLIPOP)
 	public static Bundle objects() {
 		Bundle b = new Bundle();
 		if (VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT) {

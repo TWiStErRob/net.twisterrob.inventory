@@ -6,14 +6,12 @@ import javax.inject.Inject;
 
 import org.slf4j.*;
 
-import android.annotation.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
@@ -245,7 +243,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 		final ImageButton help = view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
-			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onClick(View v) {
 				PopupMenu popup = new PopupMenu(v.getContext(), v);
 				onPrepareContextMenu(popup.getMenu(), popup.getMenuInflater());

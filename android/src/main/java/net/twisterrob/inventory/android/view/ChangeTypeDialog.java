@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.view;
 
 import android.animation.*;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -45,7 +44,6 @@ public class ChangeTypeDialog {
 		initSpinner();
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void initSpinner() {
 		spinner = ContextCompat.getDrawable(context, R.drawable.spinner);
 		spinner.setColorFilter(Constants.Pic.tint());
@@ -55,14 +53,12 @@ public class ChangeTypeDialog {
 		}
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void startShowLoading() {
 		if (spinnerAnim != null) {
 			spinnerAnim.start();
 		}
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void finishShowLoading() {
 		if (spinnerAnim != null) {
 			spinnerAnim.end();
@@ -152,7 +148,6 @@ public class ChangeTypeDialog {
 		// Delay things, so that ListView has time to lay out the new Adapter
 		// if it was just set in the same frame as this call.
 		list.post(new Runnable() {
-			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {
 				if (offset < list.getHeight()) {
 					float scale = Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f);

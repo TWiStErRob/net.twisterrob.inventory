@@ -1,13 +1,13 @@
 package net.twisterrob.inventory.android.activity;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 
@@ -16,7 +16,7 @@ import net.twisterrob.android.permissions.PermissionState;
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.backup.R;
 
-@TargetApi(Build.VERSION_CODES.TIRAMISU)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 public class BackupNotificationsMenu implements MenuProvider {
 	private final @NonNull PermissionProtectedAction notifications;
 

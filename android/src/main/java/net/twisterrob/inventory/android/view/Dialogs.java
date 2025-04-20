@@ -2,11 +2,9 @@ package net.twisterrob.inventory.android.view;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
 import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.View;
 
@@ -81,7 +79,6 @@ public class Dialogs {
 			return state;
 		}
 
-		@TargetApi(VERSION_CODES.HONEYCOMB)
 		@Override protected void onPostExecute(final ActionState state) {
 			super.onPostExecute(state);
 			if (state.check(context)) {
