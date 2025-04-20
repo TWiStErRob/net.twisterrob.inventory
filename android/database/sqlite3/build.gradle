@@ -24,6 +24,12 @@ dependencies {
 	grammars("antlr/grammars-v4:sql/sqlite/SQLiteParser:3a73a199cc31fb600c5d7b0f141cedd168933e20@g4")
 }
 
+interface ExecOperationsProvider {
+	@SuppressWarnings('UnnecessaryQualifiedReference')
+	@javax.inject.Inject
+	ExecOperations getExecOperations()
+}
+
 def downloadGrammars = tasks.register("downloadGrammars", Copy.class) {
 	File dir = CollectionsKt.single(sourceSets.main.antlr.srcDirs)
 	from(configurations.grammars)
@@ -33,13 +39,17 @@ def downloadGrammars = tasks.register("downloadGrammars", Copy.class) {
 			.file(new File(dir, "SQLiteParser.g4.patch"))
 			.withPropertyName("SQLiteParser patch")
 			.withPathSensitivity(PathSensitivity.NONE)
+	ExecOperations execOperations = objects.newInstance(ExecOperationsProvider.class).execOperations
 	doLast {
 		// Not a separate task, because it changes the output of this task, so caching wouldn't work.
-		providers.exec {
-			workingDir(dir)
-			executable("git")
-			args("apply", "SQLiteParser.g4.patch")
-		}
+		execOperations
+			.exec {
+				workingDir(dir)
+				executable("git")
+				args("apply", "SQLiteParser.g4.patch")
+			}
+			.rethrowFailure()
+			.assertNormalExitValue()
 	}
 }
 
