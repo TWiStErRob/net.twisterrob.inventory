@@ -40,7 +40,7 @@ dependencies {
 	// instrumentation.gradle.kts
 	compileOnly("com.android.tools.utp:android-test-plugin-result-listener-gradle-proto:31.9.2")
 	compileOnly("com.google.testing.platform:core-proto:0.0.8-alpha08")
-	compileOnly("com.google.protobuf:protobuf-java:3.25.6")
+	compileOnly("com.google.protobuf:protobuf-java:3.25.7")
 	// endregion
 	
 	// TODEL https://github.com/gradle/gradle/issues/15383
