@@ -34,7 +34,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `load sizes - success`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			val (loading, model) = mockReload()
 			containerHost.loadSizes()
 			expectReload(loading, model)
@@ -44,7 +43,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `load sizes - failure`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			val (loading, model) = mockReload()
 			ReflectionTools.set(model, "errors", "test error")
 			containerHost.loadSizes()
@@ -57,7 +55,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `restoreDatabase flow - success`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			containerHost.restoreDatabase()
 			expectSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 			val (loading, model) = mockReload()
@@ -84,7 +81,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `restoreDatabase flow - failure`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			containerHost.restoreDatabase()
 			expectSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 			val (loading, model) = mockReload()
@@ -112,7 +108,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `clearImageCache flow - clear`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			containerHost.clearImageCache()
 			expectState {
 				copy(
@@ -131,7 +126,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `clearImageCache flow - cancel`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			containerHost.clearImageCache()
 			expectState {
 				copy(
@@ -151,7 +145,6 @@ class ManageSpaceViewModelTest {
 	@Test
 	fun `clearImageCache flow - confirm`() = runTest {
 		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
-			expectInitialState()
 			containerHost.clearImageCache()
 			expectState {
 				copy(
