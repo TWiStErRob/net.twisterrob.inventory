@@ -117,7 +117,7 @@ jobs:
           report_individual_runs: true
           action_fail_on_inconclusive: true
           test_changes_limit: 0
-          junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
+          files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
 
       - name: "Upload 'APKs' artifact."
         if: ${{ success() || failure() }}
