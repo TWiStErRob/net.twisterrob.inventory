@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="true" name="AGP (7.4.2)" variant="all" version="7.4.2">
+<issues format="6" by="lint 8.11.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.11.0)" variant="all" version="8.11.0">
 
     <issue
         id="StaticFieldLeak"
@@ -8,7 +8,7 @@
         errorLine2="               ~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/fragment/data/BaseEditFragment.java"
-            line="493"
+            line="516"
             column="16"/>
     </issue>
 
@@ -19,7 +19,7 @@
         errorLine2="                                    ^">
         <location
             file="src/main/java/net/twisterrob/inventory/android/view/ChangeTypeListener.java"
-            line="63"
+            line="73"
             column="37"/>
     </issue>
 
@@ -30,7 +30,7 @@
         errorLine2="  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/view/Dialogs.java"
-            line="101"
+            line="102"
             column="3"/>
     </issue>
 
@@ -63,7 +63,7 @@
         errorLine2="               ~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/activity/ImageActivity.java"
-            line="125"
+            line="145"
             column="16"/>
     </issue>
 
@@ -74,7 +74,7 @@
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
-            line="486"
+            line="487"
             column="16"/>
     </issue>
 
@@ -85,7 +85,7 @@
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
-            line="512"
+            line="514"
             column="16"/>
     </issue>
 
@@ -96,7 +96,7 @@
         errorLine2="               ~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/sunburst/SunburstFragment.java"
-            line="313"
+            line="312"
             column="16"/>
     </issue>
 

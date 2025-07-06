@@ -11,3 +11,7 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-java'
 	compileOnly(libs.androidx.lifecycleViewModel)
 }
+
+// This module is meant to be used as testImplementation, running on the JVM,
+// so it doesn't matter what classes it references.
+android.lint.disable.add("InvalidPackage")
