@@ -8,7 +8,7 @@ jobs:
   instrumentation:
     name: "${{ matrix.api }}"
 
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@399b8cdc4ab5bcde5fd32dde5da0ccc57a244107 # v3
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@8945ab97e9e6c0ebea42144bc37397f7fa6a1c60 # v3
     with:
       android-api: ${{ matrix.api }}
       name-artifact-fine-grained: 'SVG {0}'
