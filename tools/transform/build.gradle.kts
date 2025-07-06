@@ -65,7 +65,6 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 	configure: JvmTestSuite.() -> Unit
 ) {
 	register<JvmTestSuite>("${name}IntegrationTest") {
-		testType.set("${TestSuiteType.INTEGRATION_TEST}-${name}")
 		useJUnit(libs.versions.test.junit4)
 		dependencies {
 			implementation(project())

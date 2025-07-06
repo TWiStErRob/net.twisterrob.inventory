@@ -65,26 +65,46 @@
 		<!-- TODEL review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
+
+	<issue id="PropertyEscape">
+		<!-- TODEL https://issuetracker.google.com/issues/429703136 -->
+		<ignore path="gradle.properties" />
+	</issue>
+
 	<issue id="NewerVersionAvailable" severity="ignore">
 		<!-- Ignore as Renovate is enabled. -->
 	</issue>
+
 	<issue id="AndroidGradlePluginVersion" severity="ignore">
 		<!-- Ignore as Renovate is enabled. -->
 	</issue>
+
 	<issue id="GradleDependency" severity="ignore">
 		<!-- Ignore as Renovate is enabled. -->
 	</issue>
+
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
+
 	<issue id="UnknownNullness" severity="ignore">
 		<!-- too many to fix yet -->
 	</issue>
+
 	<issue id="SyntheticAccessor" severity="ignore">
 		<!-- too many to fix yet -->
 	</issue>
+
 	<issue id="ObsoleteSdkInt" severity="ignore">
 		<!-- Keeping historical code for documentation purposes for now. -->
 	</issue>
+
+	<issue id="UseTomlInstead" severity="ignore">
+		<!--
+			It is how project dependencies are designed at the moment.
+			Should use typesafe project accessors, but first need to get rid of included builds.
+		-->
+	</issue>
+
 	<issue id="InvalidPackage">
 
 		<!--
@@ -94,7 +114,9 @@
 		<ignore regexp="^Invalid package reference in org\.mockito:mockito-core; not included in Android: `java\.lang\.instrument`\. Referenced from `org\.mockito\.internal\.PremainAttach`\.$" />
 
 	</issue>
+
 	<issue id="LintBaseline">
 		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
 	</issue>
+
 </lint>

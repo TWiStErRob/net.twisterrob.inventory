@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.build.unfuscation
 
-import com.android.build.api.artifact.Artifact
-import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.internal.tasks.R8Task
@@ -48,10 +46,10 @@ class MappingPlugin : Plugin<Project> {
 					this.dependsOn(obfuscateTask)
 				}
 
-			@Suppress("TYPE_MISMATCH", "CAST_NEVER_SUCCEEDS") // TODO Figure out how to wire this.
-			(variant.artifacts.use(unfuscateTask)
+			// TODO Figure out how to wire this.
+			variant.artifacts.use(unfuscateTask)
 				.wiredWithFiles(UnfuscateTask::mapping, UnfuscateTask::newMapping)
-				.toTransform(SingleArtifact.OBFUSCATION_MAPPING_FILE as Artifact.Transformable))
+			//  .toTransform(SingleArtifact.OBFUSCATION_MAPPING_FILE)
 		}
 	}
 }
