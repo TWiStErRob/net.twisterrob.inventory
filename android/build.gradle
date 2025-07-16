@@ -36,6 +36,8 @@ dependencies {
 	implementation(libs.slf4j.api)
 	ksp(libs.glide.ksp)
 
+	coreLibraryDesugaring(libs.desugar)
+
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
 //	compileOnly(libs.xalan)
@@ -83,6 +85,10 @@ android {
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
+	}
+	compileOptions {
+		// Required because :orbit needs it for androidTest. Silly.
+		coreLibraryDesugaringEnabled = true
 	}
 	buildFeatures {
 		buildConfig = true
