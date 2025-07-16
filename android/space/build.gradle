@@ -17,6 +17,7 @@ dependencies {
 	implementation(libs.flexbox)
 
 	implementation(libs.orbit.viewModel)
+	coreLibraryDesugaring(libs.desugar)
 	testImplementation(libs.orbit.test)
 	testImplementation(libs.kotlin.coroutinesTest) // TODEL https://github.com/orbit-mvi/orbit-mvi/issues/177
 	testImplementation(libs.test.mockitoKotlin)
@@ -30,5 +31,9 @@ dependencies {
 android {
 	buildFeatures {
 		viewBinding = true
+	}
+	compileOptions {
+		// Required because :orbit needs it for androidTest. Silly.
+		coreLibraryDesugaringEnabled = true
 	}
 }
