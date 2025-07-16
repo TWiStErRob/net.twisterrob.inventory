@@ -4,7 +4,7 @@ java-android-target = "11"
 #
 agp = "8.11.1"
 # 23.0.0 + agp
-agp-tools = "31.10.1"
+agp-tools = "31.11.1"
 twisterrob = "0.18" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 desugar = "2.1.5"
 detekt = "1.23.8"
