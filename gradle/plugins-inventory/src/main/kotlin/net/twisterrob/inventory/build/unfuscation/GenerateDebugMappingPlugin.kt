@@ -46,7 +46,7 @@ class GenerateDebugMappingPlugin : Plugin<Project> {
 						if (false) println("${source}/${path}: ${clazz}")
 						@Suppress("UNUSED_VARIABLE")
 						val swapCase =
-							org.gradle.internal.impldep.org.apache.commons.lang.StringUtils::swapCase
+							org.gradle.internal.impldep.org.apache.commons.lang3.StringUtils::swapCase
 						val className = { s: String -> s.lowercase(Locale.ROOT) }
 						val methodName = { s: String -> s }
 						val fieldName = { s: String -> s }
