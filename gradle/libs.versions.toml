@@ -64,7 +64,7 @@ xalan = "2.7.3"
 saxon = "12.8"
 javaxInject = "1"
 guava = "27.0.1-jre"
-jbrAnn = "26.0.2"
+jbrAnn = "26.0.2-1"
 
 test-junit4 = "4.13.2"
 test-mockito = "5.19.0"
