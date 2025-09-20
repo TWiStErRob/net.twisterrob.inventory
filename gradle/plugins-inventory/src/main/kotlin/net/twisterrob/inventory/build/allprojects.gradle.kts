@@ -21,6 +21,7 @@ tasks.withType<KotlinCompile>().configureEach kotlin@{
 		allWarningsAsErrors.set(true)
 		jvmTarget.set(libs.versions.java.android.target.map(JvmTarget::fromTarget))
 		freeCompilerArgs.add("-Xcontext-parameters")
+		freeCompilerArgs.add("-Xannotation-default-target=param-property")
 	}
 }
 

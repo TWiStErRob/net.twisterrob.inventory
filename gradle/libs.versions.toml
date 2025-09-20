@@ -9,7 +9,7 @@ twisterrob = "0.18" # https://github.com/TWiStErRob/net.twisterrob.gradle/releas
 desugar = "2.1.5"
 detekt = "1.23.8"
 kotlin = "2.2.20"
-kotlin-ksp = "2.2.10-2.0.2"
+kotlin-ksp = "2.2.20-2.0.3"
 kotlin-coroutines = "1.10.2"
 
 glide = "5.0.5"
