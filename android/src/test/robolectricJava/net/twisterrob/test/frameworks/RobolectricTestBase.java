@@ -24,8 +24,6 @@ import net.twisterrob.test.PackageNameShortener;
 //@RunWith(PowerMockRunner.class)
 //@PowerMockRunnerDelegate(RobolectricTestRunner.class)
 @Config(
-		// Needs to follow minSdkVersion, otherwise weird Robolectric failures are triggered.
-		sdk = Build.VERSION_CODES.LOLLIPOP,
 		// Enable LogCat in unit tests, see setUp.
 		shadows = {ShadowLog.class}
 )
