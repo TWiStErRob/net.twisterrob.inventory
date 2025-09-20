@@ -1,7 +1,6 @@
 [versions]
-java-android-source = "11"
-java-android-target = "11"
-#
+java-target = "11"
+
 agp = "8.13.0"
 # 23.0.0 + agp
 agp-tools = "31.13.0"
@@ -67,7 +66,7 @@ guava = "27.0.1-jre"
 jbrAnn = "26.0.2-1"
 
 test-junit4 = "4.13.2"
-test-mockito = "5.19.0"
+test-mockito = "5.20.0"
 test-mockito-kotlin = "6.0.0"
 test-mockito-android = "3.12.4"
 test-robolectric = "4.16"

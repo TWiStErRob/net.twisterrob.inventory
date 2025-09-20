@@ -1,7 +1,7 @@
 name: "🧪 Instrumentation Test Matrix"
 
 on:
-  workflow_call
+  workflow_call:
 
 jobs:
 
@@ -11,6 +11,7 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@8945ab97e9e6c0ebea42144bc37397f7fa6a1c60 # v3
     with:
       android-api: ${{ matrix.api }}
+      java-version: 21
       timeout-minutes: 60
       script: |
         # Workaround for :android:connectedDebugAndroidTest's output:
