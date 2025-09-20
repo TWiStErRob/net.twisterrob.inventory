@@ -1,7 +1,7 @@
 name: "🧪 Generate SVG Matrix"
 
 on:
-  workflow_call
+  workflow_call:
 
 jobs:
 
@@ -11,6 +11,7 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@8945ab97e9e6c0ebea42144bc37397f7fa6a1c60 # v3
     with:
       android-api: ${{ matrix.api }}
+      java-version: 21
       name-artifact-fine-grained: 'SVG {0}'
       name-check-results: '🔔 Test: SVG Results {0}'
       script: |

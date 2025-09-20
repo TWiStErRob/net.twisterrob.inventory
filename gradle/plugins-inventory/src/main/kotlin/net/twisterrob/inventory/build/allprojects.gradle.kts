@@ -1,7 +1,9 @@
 package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.libs
+import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -16,10 +18,20 @@ configurations.configureEach {
 	}
 }
 
-tasks.withType<KotlinCompile>().configureEach kotlin@{
-	compilerOptions { 
-		allWarningsAsErrors.set(true)
-		jvmTarget.set(libs.versions.java.android.target.map(JvmTarget::fromTarget))
+pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+	configure<KotlinBaseExtension>(KotlinBaseExtension::configureKotlin)
+}
+pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+	configure<KotlinBaseExtension>(KotlinBaseExtension::configureKotlin)
+}
+
+fun KotlinBaseExtension.configureKotlin() {
+	jvmToolchain {
+		languageVersion = libs.versions.java.target.map(JavaLanguageVersion::of)
+	}
+	this as HasConfigurableKotlinCompilerOptions<*>
+	compilerOptions {
+		allWarningsAsErrors = true
 		freeCompilerArgs.add("-Xcontext-receivers")
 	}
 }

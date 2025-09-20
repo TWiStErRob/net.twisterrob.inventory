@@ -5,6 +5,12 @@ plugins {
 	id("org.gradle.antlr")
 }
 
+java {
+	toolchain {
+		languageVersion = libs.versions.java.target.map(JavaLanguageVersion::of)
+	}
+}
+
 repositories {
 	// Defined in settings.gradle (GitHub raw).
 }

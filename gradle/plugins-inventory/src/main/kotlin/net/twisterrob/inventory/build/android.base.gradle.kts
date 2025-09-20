@@ -20,10 +20,6 @@ android {
 	defaultConfig {
 		minSdk = 21
 	}
-	compileOptions {
-		sourceCompatibility = libs.versions.java.android.source.map(JavaVersion::toVersion).get()
-		targetCompatibility = libs.versions.java.android.target.map(JavaVersion::toVersion).get()
-	}
 	lint {
 		checkReleaseBuilds = false
 		baseline = rootDir.resolve("config/lint/lint-baseline-${project.name}.xml")

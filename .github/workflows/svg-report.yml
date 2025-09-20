@@ -1,7 +1,7 @@
 name: "🧪 Generate SVG Report"
 
 on:
-  workflow_call
+  workflow_call:
 
 jobs:
 
