@@ -29,7 +29,7 @@ import net.twisterrob.test.frameworks.classes.AndroidRecipient;
  */
 // TOCHECK https://github.com/facebook/facebook-android-sdk/blob/master/facebook/src/test/java/com/facebook/FacebookPowerMockTestCase.java
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestIgnoreApp.class, sdk = Build.VERSION_CODES.LOLLIPOP)
+@Config(application = TestIgnoreApp.class)
 public class RobolectricTest_PowerMock extends PowerMockTests {
 
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
