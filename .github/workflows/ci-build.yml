@@ -1,6 +1,6 @@
 name: "🔨 Build & Verify"
 on:
-  workflow_call
+  workflow_call:
 
 jobs:
 

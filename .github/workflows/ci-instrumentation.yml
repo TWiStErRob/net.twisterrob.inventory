@@ -1,7 +1,7 @@
 name: "🧪 Instrumentation Test Matrix"
 
 on:
-  workflow_call
+  workflow_call:
 
 jobs:
 
