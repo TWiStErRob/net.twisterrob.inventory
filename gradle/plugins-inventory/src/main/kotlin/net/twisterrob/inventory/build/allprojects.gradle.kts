@@ -32,7 +32,8 @@ fun KotlinBaseExtension.configureKotlin() {
 	this as HasConfigurableKotlinCompilerOptions<*>
 	compilerOptions {
 		allWarningsAsErrors = true
-		freeCompilerArgs.add("-Xcontext-receivers")
+		freeCompilerArgs.add("-Xcontext-parameters")
+		freeCompilerArgs.add("-Xannotation-default-target=param-property")
 	}
 }
 
