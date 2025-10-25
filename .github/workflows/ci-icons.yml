@@ -27,7 +27,7 @@ jobs:
 
       - name: "Upload 'Icon Previews' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: 'Icon Previews'
           if-no-files-found: error

@@ -71,7 +71,7 @@ jobs:
 
       - name: "Upload 'Lint Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: 'Lint Results'
           if-no-files-found: error
@@ -93,7 +93,7 @@ jobs:
 
       - name: "Upload 'Detekt Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: 'Detekt Results'
           if-no-files-found: error
@@ -108,7 +108,7 @@ jobs:
 
       - name: "Upload 'Unit Test Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: 'Unit Test Results'
           if-no-files-found: error
@@ -127,7 +127,7 @@ jobs:
 
       - name: "Upload 'APKs' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: 'APKs'
           if-no-files-found: error
