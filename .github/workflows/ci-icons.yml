@@ -17,7 +17,7 @@ jobs:
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: "Generate icon previews."
         working-directory: android/data/src/main/res/raw
@@ -52,7 +52,7 @@ jobs:
     steps:
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Register problem matchers.
         run: |
