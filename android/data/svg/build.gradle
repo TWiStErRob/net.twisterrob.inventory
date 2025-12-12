@@ -55,3 +55,10 @@ androidComponents {
 	beforeVariants(selector().withName("release"), { it.enable = false })
 	beforeVariants(selector().all(), { it.enableUnitTest = false })
 }
+
+// TODEL https://github.com/bumptech/glide/issues/5601
+tasks
+		.named { it == "compileDebugAndroidTestKotlin" }
+		.configureEach { org.jetbrains.kotlin.gradle.tasks.KotlinCompile task ->
+			task.compilerOptions.freeCompilerArgs.add("-Xwarning-level=EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled")
+		}
