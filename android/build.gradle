@@ -164,3 +164,10 @@ afterEvaluate {
 		finalizedBy(copyAndroidTestResults)
 	}
 }
+
+// TODEL https://github.com/bumptech/glide/issues/5601
+tasks
+		.named { it == "compileDebugKotlin" || it == "compileRelaseKotlin" }
+		.configureEach { org.jetbrains.kotlin.gradle.tasks.KotlinCompile task ->
+			task.compilerOptions.freeCompilerArgs.add("-Xwarning-level=EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled")
+		}
