@@ -67,7 +67,7 @@ jbrAnn = "26.0.2-1"
 
 test-junit4 = "4.13.2"
 test-mockito = "5.21.0"
-test-mockito-kotlin = "6.2.1"
+test-mockito-kotlin = "6.2.2"
 test-mockito-android = "3.12.4"
 test-robolectric = "4.16.1"
 # Use this instead of 1.3
