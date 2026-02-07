@@ -1,7 +1,7 @@
 import net.twisterrob.gradle.doNotNagAbout
 
 plugins {
-	id("net.twisterrob.gradle.plugin.nagging") version "0.18"
+	id("net.twisterrob.gradle.plugin.nagging") version "0.19"
 }
 
 dependencyResolutionManagement {
