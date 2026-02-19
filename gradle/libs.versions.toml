@@ -1,7 +1,7 @@
 [versions]
 java-target = "11"
 
-agp = "8.13.1"
+agp = "9.0.1"
 # 23.0.0 + agp
 agp-tools = "32.0.0"
 twisterrob = "0.19" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
