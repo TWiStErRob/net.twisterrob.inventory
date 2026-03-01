@@ -8,7 +8,7 @@ jobs:
   instrumentation:
     name: "${{ matrix.api }}"
 
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@8945ab97e9e6c0ebea42144bc37397f7fa6a1c60 # v3
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@b2ac1bf35e26a7042bbedcd6815faaee3f20a2a8 # v3
     with:
       android-api: ${{ matrix.api }}
       java-version: 21

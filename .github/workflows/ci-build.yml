@@ -37,7 +37,7 @@ jobs:
           log-accepted-android-sdk-licenses: false
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -71,7 +71,7 @@ jobs:
 
       - name: "Upload 'Lint Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 'Lint Results'
           if-no-files-found: error
@@ -93,7 +93,7 @@ jobs:
 
       - name: "Upload 'Detekt Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 'Detekt Results'
           if-no-files-found: error
@@ -101,14 +101,14 @@ jobs:
             ${{ github.workspace }}/**/build/reports/detekt/detekt.*
 
       - name: "Publish 'Code scanning results / detekt' GitHub Code Scanning analysis."
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: ${{ success() || failure() }}
         with:
           sarif_file: ${{ github.workspace }}/gradle/plugins-inventory/build/reports/detekt/detekt.sarif
 
       - name: "Upload 'Unit Test Results' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 'Unit Test Results'
           if-no-files-found: error
@@ -127,7 +127,7 @@ jobs:
 
       - name: "Upload 'APKs' artifact."
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 'APKs'
           if-no-files-found: error
