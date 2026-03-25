@@ -32,7 +32,7 @@ jobs:
       # Temporarily until Android SDK Platform-Tools updates post 34.0.4 in ubuntu-latest.
       # https://github.com/actions/runner-images/blob/ubuntu22/20231016.1/images/linux/Ubuntu2204-Readme.md#android
       - name: "Set up Android SDK"
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           log-accepted-android-sdk-licenses: false
 
