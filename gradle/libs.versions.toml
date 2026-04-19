@@ -11,7 +11,7 @@ kotlin = "2.3.20"
 kotlin-ksp = "2.3.6"
 kotlin-coroutines = "1.10.2"
 
-glide = "5.0.5"
+glide = "5.0.7"
 androidsvg = "1.4"
 flexbox = "3.0.0"
 slf4j = "2.0.17"
