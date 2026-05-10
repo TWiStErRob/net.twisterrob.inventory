@@ -9,7 +9,7 @@ desugar = "2.1.5"
 detekt = "1.23.8"
 kotlin = "2.3.21"
 kotlin-ksp = "2.3.7"
-kotlin-coroutines = "1.10.2"
+kotlin-coroutines = "1.11.0"
 
 glide = "5.0.7"
 androidsvg = "1.4"
