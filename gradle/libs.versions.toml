@@ -14,7 +14,7 @@ kotlin-coroutines = "1.11.0"
 glide = "5.0.7"
 androidsvg = "1.4"
 flexbox = "3.0.0"
-slf4j = "2.0.17"
+slf4j = "2.0.18"
 dagger = "2.58"
 orbit = "11.0.0"
 
