@@ -24,7 +24,7 @@ jobs:
     steps:
 
       - name: "Set up JDK for Android SDK."
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: 17
           distribution: zulu
@@ -42,7 +42,7 @@ jobs:
           submodules: true
 
       - name: "Set up JDK for project."
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version-file: '.java-version'
           distribution: zulu
