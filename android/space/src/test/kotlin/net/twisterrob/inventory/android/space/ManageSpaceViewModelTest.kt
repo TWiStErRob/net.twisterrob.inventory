@@ -18,7 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.orbitmvi.orbit.test.OrbitTestContext
-import org.orbitmvi.orbit.test.test
+import org.orbitmvi.orbit.test.testWithInternalState
 
 /**
  * @see ManageSpaceViewModel
@@ -33,7 +33,7 @@ class ManageSpaceViewModelTest {
 
 	@Test
 	fun `load sizes - success`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			val (loading, model) = mockReload()
 			containerHost.loadSizes()
 			expectReload(loading, model)
@@ -42,26 +42,26 @@ class ManageSpaceViewModelTest {
 
 	@Test
 	fun `load sizes - failure`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			val (loading, model) = mockReload()
 			ReflectionTools.set(model, "errors", "test error")
 			containerHost.loadSizes()
-			expectState { copy(isLoading = true, sizes = loading) }
+			expectInternalState { copy(isLoading = true, sizes = loading) }
 			expectSideEffect(ManageSpaceUiEffect.ShowToast("test error"))
-			expectState { copy(isLoading = false, sizes = model) }
+			expectInternalState { copy(isLoading = false, sizes = model) }
 		}
 	}
 
 	@Test
 	fun `restoreDatabase flow - success`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			containerHost.restoreDatabase()
 			expectSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 			val (loading, model) = mockReload()
 			val empty = mockEmpty()
 			val mockUri: Uri = mock()
 			containerHost.restoreDatabase(mockUri)
-			expectState {
+			expectInternalState {
 				copy(
 					isLoading = true,
 					confirmation = null,
@@ -80,7 +80,7 @@ class ManageSpaceViewModelTest {
 
 	@Test
 	fun `restoreDatabase flow - failure`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			containerHost.restoreDatabase()
 			expectSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 			val (loading, model) = mockReload()
@@ -88,7 +88,7 @@ class ManageSpaceViewModelTest {
 			val mockUri: Uri = mock()
 			whenever(mockManager.restoreDatabase(mockUri)).thenThrow(TestRuntimeException())
 			containerHost.restoreDatabase(mockUri)
-			expectState {
+			expectInternalState {
 				copy(
 					isLoading = true,
 					confirmation = null,
@@ -107,9 +107,9 @@ class ManageSpaceViewModelTest {
 
 	@Test
 	fun `clearImageCache flow - clear`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			containerHost.clearImageCache()
-			expectState {
+			expectInternalState {
 				copy(
 					confirmation = ConfirmationUiState(
 						"Clear Image Cache",
@@ -125,9 +125,9 @@ class ManageSpaceViewModelTest {
 
 	@Test
 	fun `clearImageCache flow - cancel`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			containerHost.clearImageCache()
-			expectState {
+			expectInternalState {
 				copy(
 					confirmation = ConfirmationUiState(
 						"Clear Image Cache",
@@ -137,16 +137,16 @@ class ManageSpaceViewModelTest {
 				)
 			}
 			containerHost.actionCancelled()
-			expectState { copy(confirmation = null) }
+			expectInternalState { copy(confirmation = null) }
 			verifyNoInteractions(mockManager)
 		}
 	}
 
 	@Test
 	fun `clearImageCache flow - confirm`() = runTest {
-		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).test(this) {
+		ManageSpaceViewModel(mockUseCase, mockMapper, mockManager).testWithInternalState(this) {
 			containerHost.clearImageCache()
-			expectState {
+			expectInternalState {
 				copy(
 					confirmation = ConfirmationUiState(
 						"Clear Image Cache",
@@ -158,7 +158,7 @@ class ManageSpaceViewModelTest {
 			val empty = mockEmpty()
 			val (loading, model) = mockReload()
 			containerHost.actionConfirmed()
-			expectState {
+			expectInternalState {
 				copy(
 					isLoading = true,
 					confirmation = null,
@@ -176,8 +176,8 @@ class ManageSpaceViewModelTest {
 	}
 
 	private suspend fun OrbitTestContext<ManageSpaceUiState, *, *>.expectReload(loading: SizesUiState, model: SizesUiState) {
-		expectState { copy(isLoading = true, sizes = loading) }
-		expectState { copy(isLoading = false, sizes = model) }
+		expectInternalState { copy(isLoading = true, sizes = loading) }
+		expectInternalState { copy(isLoading = false, sizes = model) }
 	}
 
 	private fun mockEmpty(): SizesUiState {
