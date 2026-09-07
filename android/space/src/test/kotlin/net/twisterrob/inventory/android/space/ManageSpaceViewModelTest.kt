@@ -17,7 +17,7 @@ import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
-import org.orbitmvi.orbit.test.OrbitTestContext
+import org.orbitmvi.orbit.test.OrbitScopedTestContextInternal
 import org.orbitmvi.orbit.test.testWithInternalState
 
 /**
@@ -175,7 +175,10 @@ class ManageSpaceViewModelTest {
 		}
 	}
 
-	private suspend fun OrbitTestContext<ManageSpaceUiState, *, *>.expectReload(loading: SizesUiState, model: SizesUiState) {
+	private suspend fun OrbitScopedTestContextInternal<ManageSpaceUiState, *, *, *>.expectReload(
+		loading: SizesUiState,
+		model: SizesUiState,
+	) {
 		expectInternalState { copy(isLoading = true, sizes = loading) }
 		expectInternalState { copy(isLoading = false, sizes = model) }
 	}
