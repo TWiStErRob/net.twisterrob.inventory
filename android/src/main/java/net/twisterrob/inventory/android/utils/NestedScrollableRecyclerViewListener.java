@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener;
 public class NestedScrollableRecyclerViewListener extends SimpleOnGestureListener implements OnItemTouchListener {
 	private final RecyclerView rv;
 	private final GestureDetector detector;
+	@SuppressWarnings("this-escape") // AndroidX design.
 	public NestedScrollableRecyclerViewListener(RecyclerView rv) {
 		this.rv = rv;
 		this.detector = new GestureDetector(rv.getContext(), this);

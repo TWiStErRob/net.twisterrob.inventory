@@ -43,6 +43,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	private LoadTreeTask loadTreeTask;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public SunburstFragment() {
 		setDynamicResource(DYN_EventsClass, SunBurstEvents.class);
 	}

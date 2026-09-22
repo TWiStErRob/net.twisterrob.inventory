@@ -36,6 +36,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 
 	@Inject CategoryVisuals visuals;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public CategoryViewFragment() {
 		setDynamicResource(DYN_EventsClass, CategoryEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.category);

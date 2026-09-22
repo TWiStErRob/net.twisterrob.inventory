@@ -43,6 +43,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	private RecyclerViewLoadersController listsController;
 	private RecyclerViewLoadersController recentsController;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public MainFragment() {
 		setDynamicResource(DYN_EventsClass, MainEvents.class);
 	}

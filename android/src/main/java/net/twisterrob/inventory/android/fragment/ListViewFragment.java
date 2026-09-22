@@ -28,6 +28,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 		void listDeleted(ListDTO list);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public ListViewFragment() {
 		setDynamicResource(DYN_EventsClass, ListEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.list);

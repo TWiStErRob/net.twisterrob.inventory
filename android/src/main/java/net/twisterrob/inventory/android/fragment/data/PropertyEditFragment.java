@@ -28,6 +28,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		void propertySaved(long propertyID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public PropertyEditFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEditEvents.class);
 		setDynamicResource(DYN_NameHintResource, R.string.property_name_hint);

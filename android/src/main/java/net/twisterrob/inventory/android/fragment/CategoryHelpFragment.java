@@ -50,10 +50,12 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 
 	@Inject protected CategoryCache cache;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public CategoryHelpFragment() {
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_help);
 	}
 
+	@SuppressWarnings("this-escape") // AndroidX design.
 	private final @NonNull ActivityResultLauncher<String> saveAs = registerForActivityResult(
 			new CreateOpenableDocument("text/html"),
 			new ActivityResultCallback<Uri>() {
