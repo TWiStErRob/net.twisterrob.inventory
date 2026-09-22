@@ -5,7 +5,7 @@ plugins {
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(25)
 	}
 	registerFeature("sharedIntegrationTests") {
 		usingSourceSet(sourceSets.create("integrationTest"))

@@ -11,7 +11,7 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@104620e2c495f0c905fde6f15ea2b6453ae4eaed # v3
     with:
       android-api: ${{ matrix.api }}
-      java-version: 21
+      java-version: 25
       name-artifact-fine-grained: 'SVG {0}'
       name-check-results: '🔔 Test: SVG Results {0}'
       script: |
