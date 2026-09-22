@@ -3,3 +3,5 @@ plugins {
 	id("net.twisterrob.inventory.build.android.base")
 	id("net.twisterrob.inventory.build.allprojects")
 }
+
+android.buildFeatures.buildConfig = false
