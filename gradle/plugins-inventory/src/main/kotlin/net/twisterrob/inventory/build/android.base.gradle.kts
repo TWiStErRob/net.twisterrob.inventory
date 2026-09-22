@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.android
+import net.twisterrob.inventory.build.dsl.androidComponents
 import net.twisterrob.inventory.build.dsl.autoNamespace
 import net.twisterrob.inventory.build.dsl.libs
 
@@ -35,5 +36,16 @@ android {
 		 * Strangely even though both projects have my plugin applied which adds the fatal.
 		 */
 		fatal.remove("StopShip")
+	}
+}
+
+androidComponents {
+	finalizeDsl {
+		if (android.buildFeatures.buildConfig!!) {
+			tasks.withType<JavaCompile>().configureEach {
+				// Generated BuildConfig.java starts with `/** */ package` which is invalid.
+				options.compilerArgs.add("-Xlint:-dangling-doc-comments")
+			}
+		}
 	}
 }
