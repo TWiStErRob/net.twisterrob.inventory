@@ -14,20 +14,20 @@ java {
 }
 
 dependencies {
-	integrationTestImplementation(project)
-	integrationTestImplementation(testFixtures(project))
+	integrationTestImplementation(project(project.path))
+	integrationTestImplementation(testFixtures(project.path))
 	integrationTestImplementation(libs.test.junit4)
 }
 
 // TODO Not using `org.gradle.test-report-aggregation`, because https://github.com/gradle/gradle/issues/24272.
-val integrationTestAggregateTestReport by tasks.registering(TestReport::class) {
+val integrationTestAggregateTestReport = tasks.register<TestReport>("integrationTestAggregateTestReport") {
 	group = LifecycleBasePlugin.VERIFICATION_GROUP
 	description = "Generates aggregated test report for all integration tests."
 	// testResults.from(testing.suites*.targets*.testTask) added later when configuring the test suites.
 	destinationDirectory.convention(java.testReportDir.dir("integration-tests/aggregated-results"))
 }
 
-val integrationTests by tasks.registering {
+val integrationTests = tasks.register("integrationTests") {
 	// dependsOn("integration*Test") added later when configuring the test suites.
 	finalizedBy(integrationTestAggregateTestReport)
 }
