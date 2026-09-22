@@ -21,6 +21,7 @@ public final class Progress implements Cloneable, Serializable /* poor man's par
 	public int total;
 	public boolean pending;
 	public Throwable failure;
+	@SuppressWarnings("serial") // Instance is serializable.
 	public List<String> warnings = new ArrayList<>();
 
 	public Progress(@NonNull Type type) {

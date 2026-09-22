@@ -39,6 +39,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 
 	private long propertyID = Property.ID_ADD;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public RoomViewFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.room);

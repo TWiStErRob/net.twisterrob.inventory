@@ -26,6 +26,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		void propertyActioned(long propertyID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public PropertyListFragment() {
 		setDynamicResource(DYN_EventsClass, PropertiesEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.property_list);

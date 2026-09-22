@@ -31,6 +31,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		void roomActioned(long roomID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public RoomListFragment() {
 		setDynamicResource(DYN_EventsClass, RoomsEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.room_list);

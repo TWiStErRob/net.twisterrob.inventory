@@ -36,6 +36,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 
 	private long parentID = Item.ID_ADD;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public ItemViewFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.item);

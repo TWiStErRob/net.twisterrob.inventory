@@ -39,7 +39,7 @@ public class App extends BaseApp {
 	// TODEL https://github.com/google/dagger/issues/3601
 	@Inject @ApplicationContext Context context;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "this-escape"}) // Legacy code, design issue.
 	public App() {
 		init(BuildConfig.DEBUG, R.xml.preferences);
 		ResourceCursorAdapterWithHolder.devMode = BuildConfig.DEBUG;

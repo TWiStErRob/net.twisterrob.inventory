@@ -33,6 +33,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		void propertyDeleted(PropertyDTO property);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public PropertyViewFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.property);

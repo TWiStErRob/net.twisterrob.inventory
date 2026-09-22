@@ -28,6 +28,7 @@ public class DrawerNavigator {
 	private final int iconSize;
 	private OnNavigationItemSelectedListener navigationItemSelectedListener;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public DrawerNavigator(NavigationView nav, Activity activity) {
 		this.nav = nav;
 		this.activity = activity;

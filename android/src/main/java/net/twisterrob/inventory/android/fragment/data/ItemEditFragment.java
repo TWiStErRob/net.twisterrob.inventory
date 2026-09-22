@@ -28,6 +28,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		void itemSaved(long itemID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public ItemEditFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEditEvents.class);
 		setDynamicResource(DYN_NameHintResource, R.string.item_name_hint);

@@ -36,6 +36,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		void categoryActioned(long categoryID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public CategoryContentsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_list);

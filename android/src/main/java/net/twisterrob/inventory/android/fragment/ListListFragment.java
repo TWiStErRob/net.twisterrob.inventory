@@ -32,6 +32,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		void listRemoved(long listID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public ListListFragment() {
 		setDynamicResource(DYN_EventsClass, ListsEvents.class);
 	}

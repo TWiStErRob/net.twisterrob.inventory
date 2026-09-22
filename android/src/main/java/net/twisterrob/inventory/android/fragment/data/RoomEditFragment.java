@@ -29,6 +29,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		void roomSaved(long roomID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public RoomEditFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
 		setDynamicResource(DYN_NameHintResource, R.string.room_name_hint);

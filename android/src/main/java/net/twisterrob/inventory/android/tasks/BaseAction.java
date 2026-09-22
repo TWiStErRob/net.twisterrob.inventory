@@ -57,6 +57,7 @@ public abstract class BaseAction implements Action {
 		private static final long serialVersionUID = 1L;
 
 		private final int validationError;
+		@SuppressWarnings("serial") // Legacy code.
 		private final Object[] args;
 
 		public ValidationException(@StringRes int validationError, Object... args) {

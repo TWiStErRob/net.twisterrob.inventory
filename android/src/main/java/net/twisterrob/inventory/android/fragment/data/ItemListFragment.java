@@ -32,6 +32,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		void itemActioned(long itemID);
 	}
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public ItemListFragment() {
 		setDynamicResource(DYN_EventsClass, ItemsEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.item_list);

@@ -58,6 +58,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	@Inject Provider<ExportComponent.Builder> exportFactory;
 	@Inject Provider<ImportComponent.Builder> importFactory;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public BackupService() {
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
 	}
