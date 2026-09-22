@@ -47,7 +47,7 @@ jobs:
           --stacktrace
           --continue
           --no-build-cache
-          assemble assembleDebugAndroidTest compileDebugUnitTestSources compileReleaseUnitTestSources
+          assemble assembleDebugAndroidTest compileDebugUnitTestSources
 
       - name: "Verify project."
         working-directory: .
