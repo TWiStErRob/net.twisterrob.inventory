@@ -1,5 +1,5 @@
 [versions]
-java-target = "11"
+java-target = "21"
 
 agp = "8.13.2"
 # 23.0.0 + agp
