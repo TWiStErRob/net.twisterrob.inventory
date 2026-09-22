@@ -6,7 +6,6 @@ import com.android.build.api.component.impl.ComponentImpl
 import com.android.build.api.variant.ApplicationVariant
 import com.android.build.api.variant.Variant
 import com.android.build.gradle.internal.services.VariantServices
-import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.test.report.ReportType
 import com.android.build.gradle.internal.test.report.ResilientTestReport
 import com.android.build.gradle.internal.testing.ConnectedDevice
@@ -44,8 +43,9 @@ abstract class UpgradeTestTask : DefaultTask() {
 	/**
 	 * AGP task that runs the instrumentation test APK.
 	 */
+	@Suppress("DEPRECATION")
 	@get:Input
-	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
+	abstract val instrumentTestTask: Property<com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask>
 
 	/**
 	 * Android Debug Bridge executable used to reach the test device.
@@ -70,7 +70,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 		} finally {
 			deviceProvider.terminate()
 		}
-		val realDevice = device.iDevice
+		val realDevice: IDevice = device.iDevice
 
 		val testApk = debugVariant.androidTest!!.artifacts.apk
 		val testApplicationId = debugVariant.androidTest!!.applicationId.get()
@@ -189,3 +189,9 @@ internal val Variant.services: VariantServices
 
 internal val Artifacts.apk: File
 	get() = this.get(SingleArtifact.APK).get().asFileTree.singleFile
+
+val ConnectedDevice.iDevice: IDevice
+	get() = ConnectedDevice::class.java
+		.getDeclaredField("iDevice")
+		.apply { isAccessible = true }
+		.get(this) as IDevice

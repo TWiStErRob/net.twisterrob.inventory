@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.build.tests.upgrade
 
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -23,9 +22,9 @@ class UpgradeTestPlugin : Plugin<Project> {
 				adb.set(project.androidComponents.sdkComponents.adb)
 				val connectedAndroidTest = project.tasks.named("connectedAndroidTest")
 
-				@Suppress("UNCHECKED_CAST")
+				@Suppress("UNCHECKED_CAST", "DEPRECATION")
 				val instrument = connectedAndroidTest.get().dependsOn.single()
-					as TaskProvider<DeviceProviderInstrumentTestTask>
+					as TaskProvider<com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask>
 				instrumentTestTask.set(instrument)
 
 				dependsOn("assembleDebug")
