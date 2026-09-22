@@ -18,3 +18,13 @@ afterEvaluate {
 }
 
 android.buildFeatures.buildConfig = false
+androidComponents {
+	finalizeDsl {
+		if (android.buildFeatures.buildConfig!!) {
+			tasks.withType<JavaCompile>().configureEach {
+				// Generated BuildConfig.java starts with `/** */ package` which is invalid.
+				options.compilerArgs.add("-Xlint:-dangling-doc-comments")
+			}
+		}
+	}
+}

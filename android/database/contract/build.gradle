@@ -10,8 +10,3 @@ dependencies {
 
 // See net.twisterrob.inventory.android.content.InventoryContract.AUTHORITY.
 android.buildFeatures.buildConfig = true
-
-tasks.withType(JavaCompile).configureEach {
-	// Generated BuildConfig.java starts with `/** */ package` which is invalid.
-	options.compilerArgs.add("-Xlint:-dangling-doc-comments")
-}
