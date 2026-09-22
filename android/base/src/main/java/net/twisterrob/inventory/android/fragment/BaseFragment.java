@@ -27,6 +27,7 @@ public class BaseFragment<T> extends VariantFragment {
 
 	protected T eventsListener;
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public BaseFragment() {
 		super();
 		// prevent headaches when querying arguments (see Main.onCreateOptionsMenu)

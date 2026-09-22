@@ -29,6 +29,7 @@ import net.twisterrob.inventory.android.content.InventoryContract;
 public class BackupControllerFragment extends BaseFragment<BackupControllerFragment.BackupEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupControllerFragment.class);
 
+	@SuppressWarnings("this-escape") // Legacy code, design issue.
 	public BackupControllerFragment() {
 		super(R.layout.fragment_backup_controller);
 		setDynamicResource(DYN_EventsClass, BackupEvents.class);
@@ -38,6 +39,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 		void ensureNotInProgress();
 	}
 
+	@SuppressWarnings("this-escape") // AndroidX design.
 	private final ActivityResultLauncher<String> exporter = registerForActivityResult(
 			new CreateOpenableDocument(InventoryContract.Export.TYPE_BACKUP),
 			new ActivityResultCallback<Uri>() {
@@ -51,6 +53,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 			}
 	);
 
+	@SuppressWarnings("this-escape") // AndroidX design.
 	private final ActivityResultLauncher<String[]> importer = registerForActivityResult(
 			new OpenOpenableDocument(),
 			new ActivityResultCallback<Uri>() {
