@@ -18,10 +18,10 @@ dependencies {
 android {
 	namespace = project.autoNamespace
 	compileSdk = 37
-	defaultConfig {
+	defaultConfig.apply {
 		minSdk = 21
 	}
-	lint {
+	lint.apply {
 		checkReleaseBuilds = false
 		baseline = rootDir.resolve("config/lint/lint-baseline-${project.name}.xml")
 		lintConfig = rootDir.resolve("config/lint/lint.xml")

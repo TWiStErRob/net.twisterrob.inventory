@@ -34,7 +34,7 @@ android {
 	testOptions {
 		managedDevices {
 			def apiDevices = (29..33).collect {api ->
-				devices.register("api${api}", com.android.build.api.dsl.ManagedVirtualDevice) {
+				localDevices.register("api${api}") {
 					device = "Pixel 2"
 					apiLevel = api
 					require64Bit = true
