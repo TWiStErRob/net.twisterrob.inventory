@@ -41,13 +41,22 @@ abstract class GenerateUtpDependenciesTask : DefaultTask() {
 		output.convention { project.rootDir.resolve("gradle/utp.versions.toml") }
 	}
 
+	/**
+	 * Classpath containing the UTP dependency metadata to export.
+	 */
 	@get:InputFiles
 	@get:Classpath
 	abstract val utpClasspath: ConfigurableFileCollection
 
+	/**
+	 * Version-catalog TOML file generated from [utpClasspath].
+	 */
 	@get:OutputFile
 	abstract val output: RegularFileProperty
 
+	/**
+	 * Write the UTP dependency catalog to [output].
+	 */
 	@TaskAction
 	fun run() {
 		output.get().asFile.writeText(

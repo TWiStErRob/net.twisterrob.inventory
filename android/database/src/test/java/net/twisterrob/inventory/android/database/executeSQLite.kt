@@ -50,7 +50,7 @@ private fun executeSQLite(dir: File, script: File): String {
 	assertTrue("Timed out", @Suppress("Since15") process.waitFor(3, SECONDS))
 	if (process.exitValue() != 0) {
 		assertEquals(
-			@Suppress("StringShouldBeRawString") // It would be more complex that way.
+			@Suppress("detekt.StringShouldBeRawString") // It would be more complex that way.
 			"Non-zero exit value:\nstdout:\n${out.buffer}\nstderr:\n${err.buffer}",
 			0,
 			process.exitValue()

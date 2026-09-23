@@ -8,14 +8,16 @@ import org.gradle.kotlin.dsl.container
 import org.gradle.kotlin.dsl.register
 
 /**
- * Use it as
+ * Registers database-generation tasks from the configured database entities.
+ *
+ * Use it as:
  * ```gradle
  * apply plugin: InventoryDatabasePlugin
  * databaseEntities {
  *     categories {
- *         input = file(path to Android res xml with Strings)
- *         iconFolder = file(path to SVG files)
- *         assetPath = path of the SQL file under Android Assets
+ *         input = file("path to Android res xml with Strings")
+ *         iconFolder = file("path to SVG files")
+ *         assetPath = "path of the SQL file under Android Assets"
  *         conversion = "structure|SQL"
  *     }
  * }

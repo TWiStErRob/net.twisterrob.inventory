@@ -1,0 +1,24 @@
+config:
+  # If a property in the configuration is deprecated, that'll fail Detekt execution.
+  warningsAsErrors: true
+
+naming:
+
+  FunctionNameMaxLength:
+    excludes:
+      - '**/src/test/kotlin/**Test.kt'
+
+style:
+
+  NoTabs:
+    # I'm a tab guy, I don't pay for space in advance.
+    active: false
+
+  MultilineRawStringIndentation:
+    # Indentation uses tabs, so one indentation unit is one character.
+    indentSize: 1
+
+  SpacingAfterPackageAndImports:
+    excludes:
+      # False positives in gradle/plugins.
+      - '**/*.gradle.kts'

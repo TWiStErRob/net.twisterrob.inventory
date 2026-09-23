@@ -3,7 +3,7 @@ package net.twisterrob.inventory.build.database.generator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@Suppress("LongMethod")
+@Suppress("detekt.LongMethod")
 class StructurePrinterTest {
 
 	@Test fun `multiple levels with siblings`() {

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.build.database.generator
 import java.io.IOException
 import java.io.Writer
 
-interface Printer {
+internal interface Printer {
 
 	@Throws(IOException::class)
 	fun start(output: Writer)

@@ -60,7 +60,7 @@ internal class ManageSpaceUiEffectHandler @Inject constructor(
 							if (value == null) {
 								return
 							}
-							@Suppress("MagicNumber")
+							@Suppress("detekt.MagicNumber")
 							val vacuumBytes = value * 1024 * 1024
 							viewModel.vacuumDatabaseIncremental(vacuumBytes)
 						}

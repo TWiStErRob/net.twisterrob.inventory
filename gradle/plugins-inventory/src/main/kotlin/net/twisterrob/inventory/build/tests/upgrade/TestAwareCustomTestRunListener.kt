@@ -12,13 +12,13 @@ internal class TestAwareCustomTestRunListener(
 	logger: ILogger,
 ) : CustomTestRunListener(deviceName, projectName, flavorName, logger) {
 
+	private var test: String? = null
+
 	@kotlin.jvm.Throws(IOException::class)
 	override fun getResultFile(reportDir: File): File {
 		val resultFile = super.getResultFile(reportDir)
 		return resultFile.parentFile.resolve(addTestName(resultFile.name))
 	}
-
-	private var test: String? = null
 
 	fun setTest(test: String) {
 		this.test = test

@@ -37,7 +37,7 @@ internal class SQLPrinter(
 			}
 			union = "UNION"
 		}
-		@Suppress("MagicNumber")
+		@Suppress("detekt.MagicNumber")
 		output.write("\t${union} SELECT ${parent.padStart(5)}, ${id.padStart(5)}, ${name.padEnd(42)} ${icon}${debug}\n")
 		prev = c
 	}
@@ -51,8 +51,14 @@ internal class SQLPrinter(
 
 	companion object {
 
-		const val HEADER =
-			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n"
-		const val FOOTER = ";\n"
+		val HEADER = """
+			INSERT INTO Category
+				           (parent,   _id, name,                                      image)
+			
+		""".trimIndent()
+		val FOOTER = """
+			;
+			
+		""".trimIndent()
 	}
 }

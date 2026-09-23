@@ -135,7 +135,7 @@ class MappingTest {
 				    46:46:void <init>() -> <init>
 				    85:113:void onCreate(android.os.Bundle) -> onCreate
 				
-		""".trimIndent(), output.readText()
+			""".trimIndent(), output.readText()
 		)
 	}
 }

@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.build.database.generator
 
-data class Category(
+@Suppress("detekt.DataClassShouldBeImmutable") // TODO review what's wrong with the model.
+internal data class Category(
 	var parent: Category? = null,
 	var name: String? = null,
 	var id: Int = INVALID_ID,

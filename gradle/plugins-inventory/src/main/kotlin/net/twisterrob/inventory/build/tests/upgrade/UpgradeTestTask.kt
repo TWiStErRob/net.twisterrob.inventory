@@ -29,20 +29,35 @@ import org.gradle.work.DisableCachingByDefault
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+/**
+ * Verifies the upgrade path of the application using ADB and instrumentation tests.
+ */
 @DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
+	/**
+	 * Application variant whose installed version will be upgraded.
+	 */
 	@get:Input
 	abstract val testedVariant: Property<ApplicationVariant>
 
+	/**
+	 * AGP task that runs the instrumentation test APK.
+	 */
 	@get:Input
 	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
 
+	/**
+	 * Android Debug Bridge executable used to reach the test device.
+	 */
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.NONE)
 	abstract val adb: RegularFileProperty
 
-	@Suppress("LongMethod") // Will be split up when I make it work again.
+	/**
+	 * Performs the upgrade and executes the instrumentation tests.
+	 */
+	@Suppress("detekt.LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {
 		val debugVariant = testedVariant.get()
@@ -70,7 +85,10 @@ abstract class UpgradeTestTask : DefaultTask() {
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
-			device.name, services.projectInfo.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE)
+			deviceName = device.name,
+			projectName = services.projectInfo.name,
+			flavorName = debugVariant.name,
+			logger = StdLogger(StdLogger.Level.VERBOSE)
 		).apply {
 			setReportDir(results)
 		}
@@ -98,9 +116,9 @@ abstract class UpgradeTestTask : DefaultTask() {
 			try {
 				val report = ResilientTestReport(ReportType.SINGLE_FLAVOR, results, reports)
 				report.generateReport()
-			} catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
+			} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Throwable) {
 				if (finished) { // Swallow if there's already a failure.
-					@Suppress("ThrowingExceptionFromFinally") // Safe, see condition.
+					@Suppress("detekt.ThrowingExceptionFromFinally") // Safe, see condition.
 					throw ex
 				}
 			}
@@ -151,7 +169,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 		runner.run(runListener)
 
 		val result = runListener.runResult
-		@Suppress("ComplexCondition")
+		@Suppress("detekt.ComplexCondition")
 		if (result.hasFailedTests()
 			|| result.isRunFailure
 			|| result.numTests <= 0
@@ -162,12 +180,12 @@ abstract class UpgradeTestTask : DefaultTask() {
 	}
 }
 
-val Variant.services: VariantServices
+internal val Variant.services: VariantServices
 	@Suppress("PrivateApi")
 	get() = ComponentImpl::class.java
 		.getDeclaredField("internalServices")
 		.apply { isAccessible = true }
 		.get(this) as VariantServices
 
-val Artifacts.apk: File
+internal val Artifacts.apk: File
 	get() = this.get(SingleArtifact.APK).get().asFileTree.singleFile

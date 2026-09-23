@@ -4,7 +4,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@Suppress("LongMethod")
+@Suppress("detekt.LongMethod")
 class SQLPrinterTest {
 
 	@Test fun `top-level`() {
@@ -68,7 +68,7 @@ class SQLPrinterTest {
 		""".trimIndent()
 		assertEquals(expected, result)
 	}
-	
+
 	@Test fun `multiple levels with siblings`() {
 		val xml = """
 			<resources>

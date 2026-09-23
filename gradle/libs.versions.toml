@@ -6,7 +6,7 @@ agp = "8.13.2"
 agp-tools = "32.4.1"
 twisterrob = "0.20" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 desugar = "2.1.5"
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.6"
 kotlin = "2.3.21"
 kotlin-ksp = "2.3.7"
 kotlin-coroutines = "1.11.0"
@@ -172,7 +172,7 @@ deprecated-hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
 
 [plugins]
 android = { id = "com.android.application", version.ref = "agp" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 twisterrob-quality = { id = "net.twisterrob.gradle.plugin.quality", version.ref = "twisterrob" }

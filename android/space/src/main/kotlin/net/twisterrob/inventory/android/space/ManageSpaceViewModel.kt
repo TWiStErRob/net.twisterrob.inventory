@@ -19,7 +19,7 @@ import javax.inject.Inject
 private val LOG = logger<ManageSpaceViewModel>()
 
 @HiltViewModel
-@Suppress("TooManyFunctions") // Blame the screen, not the ViewModel?
+@Suppress("detekt.TooManyFunctions") // Blame the screen, not the ViewModel?
 internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
@@ -277,7 +277,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			manager.killProcessesAroundManageSpaceActivity()
 		} catch (ex: CancellationException) {
 			throw ex
-		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+		} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Exception) {
 			LOG.error("cleanTask failed", ex)
 			postSideEffect(ManageSpaceUiEffect.ShowToast(ex.toString()))
 		}
