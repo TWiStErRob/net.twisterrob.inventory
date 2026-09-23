@@ -2,10 +2,8 @@ package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.libs
 import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 configurations.configureEach {
 	resolutionStrategy {
@@ -45,19 +43,19 @@ plugins.withId("org.jetbrains.kotlin.kapt") {
 	}
 }
 
-tasks.withType<JavaCompile>().configureEach javac@{
-	this@javac.options.compilerArgs = this@javac.options.compilerArgs + listOf(
+tasks.withType<JavaCompile>().configureEach {
+	this.options.compilerArgs = this.options.compilerArgs + listOf(
 		// Enable all warnings the compiler knows.
 		"-Xlint:all",
 		// Fail build when any warning pops up.
 		"-Werror",
 	)
 
-	if (this@javac.name.endsWith("UnitTestJavaWithJavac")
-		|| this@javac.name.endsWith("AndroidTestJavaWithJavac")
-		|| this@javac.path.startsWith(":android:database:test_helpers:")
+	if (this.name.endsWith("UnitTestJavaWithJavac")
+		|| this.name.endsWith("AndroidTestJavaWithJavac")
+		|| this.path.startsWith(":android:database:test_helpers:")
 	) {
-		this@javac.options.compilerArgs = this@javac.options.compilerArgs + listOf(
+		this.options.compilerArgs = this.options.compilerArgs + listOf(
 			// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 			// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files
 			// is ignored in version 51.0 class files
@@ -66,7 +64,7 @@ tasks.withType<JavaCompile>().configureEach javac@{
 	}
 }
 
-tasks.withType<Test>().configureEach test@{
+tasks.withType<Test>().configureEach {
 	jvmArgs( // 9 <= Java
 		// net.twisterrob.test.PackageNameShortener.fixPackages uses reflection on Throwable/StackTraceElement.
 		"--add-opens", "java.base/java.lang=ALL-UNNAMED",

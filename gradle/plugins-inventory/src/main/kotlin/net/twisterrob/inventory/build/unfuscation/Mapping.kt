@@ -21,10 +21,11 @@ internal class Mapping {
 			val originalName = match["name"]!!.value
 			val obfuscatedName = match["obfuscated"]!!.value
 			val newName =
-				if (originalName == obfuscatedName)
+				if (originalName == obfuscatedName) {
 					obfuscatedName
-				else
+				} else {
 					unfuscate(originalName, obfuscatedName)
+				}
 			out.write(line.substring(0, match[MAPPING_PATTERN_OBFUSCATED_INDEX]!!.range.first))
 			out.write(newName)
 			out.write(line.substring(match[MAPPING_PATTERN_OBFUSCATED_INDEX]!!.range.last + 1))
@@ -45,10 +46,11 @@ internal class Mapping {
 		val origName = getName(original)
 		val obfName = getName(obfuscated).takeIf { it != origName } ?: ""
 		val packName = getPackage(original)
-		return if (packName.isEmpty())
+		return if (packName.isEmpty()) {
 			"${origName}_${obfName}"
-		else
+		} else {
 			"${packName}.${origName}_${obfName}"
+		}
 	}
 
 	private fun getPackage(name: String): String =
@@ -67,7 +69,7 @@ internal class Mapping {
 		private val MAPPING_PATTERN: Regex = Regex(
 			"""
 				^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$
-		    """.trimIndent()
+			""".trimIndent()
 		)
 		private const val MAPPING_PATTERN_OBFUSCATED_INDEX: Int = 6
 	}

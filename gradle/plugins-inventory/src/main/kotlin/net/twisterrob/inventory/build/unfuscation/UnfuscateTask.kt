@@ -38,7 +38,7 @@ abstract class UnfuscateTask : DefaultTask() {
 		//if (!config.obfuscate) {
 		//	return // nothing to unfuscate when -dontobfuscate
 		//}
-		
+
 		val mapping = mapping.get().asFile
 		val newMapping = newMapping.get().asFile
 

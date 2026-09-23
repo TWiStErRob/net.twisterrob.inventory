@@ -44,7 +44,7 @@ abstract class InventoryDatabaseTask : DefaultTask() {
 	fun generate() {
 		val input = input.get().asFile
 		input.reader().use { reader ->
-			val outputDir = output.get().asFile.also { it.mkdirs() }
+			val outputDir = output.get().asFile.apply { mkdirs() }
 			val output = outputDir.resolve(assetPath.get())
 			output.writer().use { writer ->
 				val printer = getPrinter(conversion.orNull)

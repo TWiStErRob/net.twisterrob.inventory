@@ -96,9 +96,8 @@ internal class DatabaseGenerator(
 		@JvmStatic
 		@Throws(Throwable::class)
 		fun main(args: Array<String>) {
-			val svgFolder = File("..\\..\\data\\src\\main\\res\\raw")
-			val input =
-				FileReader(File("..\\..\\data\\src\\main\\res\\values\\strings_Categories.xml"))
+			val svgFolder = File("""..\..\data\src\main\res\raw""")
+			val input = FileReader(File("""..\..\data\src\main\res\values\strings_Categories.xml"""))
 			val output = PrintWriter(System.out, true)
 			DatabaseGenerator(SQLPrinter(), svgFolder).transform(input, output)
 		}

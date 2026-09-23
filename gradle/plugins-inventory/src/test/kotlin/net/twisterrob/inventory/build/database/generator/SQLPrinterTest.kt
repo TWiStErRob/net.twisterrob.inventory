@@ -68,7 +68,7 @@ class SQLPrinterTest {
 		""".trimIndent()
 		assertEquals(expected, result)
 	}
-	
+
 	@Test fun `multiple levels with siblings`() {
 		val xml = """
 			<resources>
