@@ -15,7 +15,7 @@ java {
 
 dependencies {
 	integrationTestImplementation(project(project.path))
-	integrationTestImplementation(testFixtures(project.path))
+	integrationTestImplementation(testFixtures(project(project.path)))
 	integrationTestImplementation(libs.test.junit4)
 }
 
