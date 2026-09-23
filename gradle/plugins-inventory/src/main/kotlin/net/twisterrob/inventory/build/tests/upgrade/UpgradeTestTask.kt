@@ -70,7 +70,10 @@ abstract class UpgradeTestTask : DefaultTask() {
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
-			device.name, services.projectInfo.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE)
+			deviceName = device.name,
+			projectName = services.projectInfo.name,
+			flavorName = debugVariant.name,
+			logger = StdLogger(StdLogger.Level.VERBOSE)
 		).apply {
 			setReportDir(results)
 		}
@@ -151,6 +154,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 		runner.run(runListener)
 
 		val result = runListener.runResult
+		@Suppress("detekt.ComplexCondition")
 		if (result.hasFailedTests()
 			|| result.isRunFailure
 			|| result.numTests <= 0
@@ -161,12 +165,12 @@ abstract class UpgradeTestTask : DefaultTask() {
 	}
 }
 
-val Variant.services: VariantServices
+internal val Variant.services: VariantServices
 	@Suppress("PrivateApi")
 	get() = ComponentImpl::class.java
 		.getDeclaredField("internalServices")
 		.apply { isAccessible = true }
 		.get(this) as VariantServices
 
-val Artifacts.apk: File
+internal val Artifacts.apk: File
 	get() = this.get(SingleArtifact.APK).get().asFileTree.singleFile

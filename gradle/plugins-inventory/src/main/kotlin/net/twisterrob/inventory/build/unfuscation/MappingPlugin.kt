@@ -35,6 +35,7 @@ class MappingPlugin : Plugin<Project> {
 					variant.name,
 					skipReason
 				)
+				@Suppress("detekt.LabeledExpression") // REPORT false positive, cannot be removed.
 				return@onVariants
 			}
 

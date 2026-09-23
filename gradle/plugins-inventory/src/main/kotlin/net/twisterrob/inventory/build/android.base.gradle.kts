@@ -8,6 +8,7 @@ plugins {
 	id("net.twisterrob.inventory.build.hilt")
 }
 
+@Suppress("AvoidDuplicateDependencies")
 dependencies {
 	"implementation"(platform("net.twisterrob.inventory.build:platform-inventory"))
 	"testImplementation"(platform("net.twisterrob.inventory.build:platform-inventory"))

@@ -14,10 +14,10 @@ import java.util.Locale
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
 class GenerateDebugMappingPlugin : Plugin<Project> {
 
-	@Suppress("detekt.LongMethod")
+	@Suppress("detekt.LongMethod", "detekt.CognitiveComplexMethod", "detekt.StringLiteralDuplication")
 	override fun apply(project: Project) {
 		(project.androidComponents as ApplicationAndroidComponentsExtension).onVariants { variant ->
-			@Suppress("UnstableApiUsage")
+			@Suppress("UnstableApiUsage", "detekt.LabeledExpression") // REPORT false positive, cannot be removed
 			if (!variant.isMinifyEnabled) return@onVariants
 			val mapping = variant.artifacts
 				.get(SingleArtifact.OBFUSCATION_MAPPING_FILE)

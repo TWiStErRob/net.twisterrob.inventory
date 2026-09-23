@@ -51,8 +51,14 @@ internal class SQLPrinter(
 
 	companion object {
 
-		const val HEADER =
-			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n"
-		const val FOOTER = ";\n"
+		val HEADER = """
+			INSERT INTO Category
+				           (parent,   _id, name,                                      image)
+			
+		""".trimIndent()
+		val FOOTER = """
+			;
+			
+		""".trimIndent()
 	}
 }

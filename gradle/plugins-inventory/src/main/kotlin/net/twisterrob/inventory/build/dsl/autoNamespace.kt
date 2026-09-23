@@ -2,7 +2,7 @@ package net.twisterrob.inventory.build.dsl
 
 import org.gradle.api.Project
 
-val Project.autoNamespace: String
+internal val Project.autoNamespace: String
 	get() = "net.twisterrob.inventory.${this.subPackage}"
 
 private val Project.subPackage: String

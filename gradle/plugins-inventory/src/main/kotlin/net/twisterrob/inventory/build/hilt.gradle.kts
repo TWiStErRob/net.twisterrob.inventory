@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.build
 
-//import net.twisterrob.inventory.build.dsl.android
 import com.android.build.api.variant.ComponentIdentity
 import com.android.build.api.variant.HasAndroidTest
 import com.android.build.api.variant.HasUnitTest
@@ -25,8 +24,8 @@ dependencies {
 	"ksp"(libs.dagger.hilt.apt)
 }
 
-tasks.withType<JavaCompile>().configureEach javac@{
-	this@javac.options.compilerArgs = this@javac.options.compilerArgs + listOf(
+tasks.withType<JavaCompile>().configureEach {
+	this.options.compilerArgs = this.options.compilerArgs + listOf(
 		// No processor claimed any of these annotations:
 		// dagger.hilt.android.HiltAndroidApp
 		// android.annotation.*

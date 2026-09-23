@@ -14,10 +14,11 @@ internal class StructurePrinter : Printer {
 		val indent = "\t".repeat(c.level + 1)
 
 		val idString =
-			if (c.id == Category.INVALID_ID)
+			if (c.id == Category.INVALID_ID) {
 				"INVALID"
-			else
+			} else {
 				c.id.toString().padStart(LevelBasedID.MAX_LEVEL + 1, ' ')
+			}
 
 		@Suppress("detekt.MagicNumber")
 		val mark =
