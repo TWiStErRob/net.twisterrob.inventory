@@ -66,8 +66,10 @@ tasks.withType<ValidatePlugins>().configureEach {
 }
 
 detekt {
+	buildUponDefaultConfig = true
 	allRules = true
 	parallel = true
+	config.from("../../config/detekt/detekt.yml")
 }
 
 tasks.register("cleanFull").configure {

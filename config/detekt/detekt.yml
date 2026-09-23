@@ -1,0 +1,13 @@
+config:
+  # If a property in the configuration is deprecated, that'll fail Detekt execution.
+  warningsAsErrors: true
+  
+style:
+
+  NoTabs:
+    # I'm a tab guy, I don't pay for space in advance.
+    active: false
+
+  MultilineRawStringIndentation:
+    # Indentation uses tabs, so one indentation unit is one character.
+    indentSize: 1
