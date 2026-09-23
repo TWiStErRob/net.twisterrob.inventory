@@ -38,8 +38,7 @@ android {
 					device = "Pixel 2"
 					apiLevel = api
 					require64Bit = true
-					// https://issuetracker.google.com/issues/267458959
-					systemImageSource = api == 32 || api == 33 ? "google_apis" : "default"
+					systemImageSource = "default"
 				}
 			}
 			groups.register("gmd") { group ->
