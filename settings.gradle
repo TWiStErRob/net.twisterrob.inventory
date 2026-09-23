@@ -21,12 +21,9 @@ pluginManagement {
 
 plugins {
 	id("net.twisterrob.gradle.plugin.settings") version "0.19"
-	id("org.gradle.toolchains.foojay-resolver-convention").version("1.0.0")
+	id("org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
 	id("com.gradle.develocity") version "4.5.1"
 }
-
-// TODO IsCIKt.CI is not visible in settings.gradle.
-def CI = System.getenv("GITHUB_ACTIONS") == "true"
 
 dependencyResolutionManagement {
 	includeBuild("gradle/platform-inventory")
