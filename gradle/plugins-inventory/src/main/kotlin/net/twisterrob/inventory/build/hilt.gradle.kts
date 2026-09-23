@@ -78,5 +78,8 @@ val ComponentIdentity.componentSourcesDir: File
 fun Project.hiltGenerated(path: String): Provider<Directory> =
 	layout.buildDirectory.dir("generated/hilt").dir(path)
 
+/**
+ * Resolves a child directory while preserving the provider's laziness.
+ */
 fun Provider<Directory>.dir(name: String): Provider<Directory> =
 	map { it.dir(name) }

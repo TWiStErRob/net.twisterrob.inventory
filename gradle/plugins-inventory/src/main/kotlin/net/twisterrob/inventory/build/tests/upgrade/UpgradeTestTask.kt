@@ -29,19 +29,34 @@ import org.gradle.work.DisableCachingByDefault
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+/**
+ * Verifies the upgrade path of the application using ADB and instrumentation tests.
+ */
 @DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
+	/**
+	 * Application variant whose installed version will be upgraded.
+	 */
 	@get:Input
 	abstract val testedVariant: Property<ApplicationVariant>
 
+	/**
+	 * AGP task that runs the instrumentation test APK.
+	 */
 	@get:Input
 	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
 
+	/**
+	 * Android Debug Bridge executable used to reach the test device.
+	 */
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.NONE)
 	abstract val adb: RegularFileProperty
 
+	/**
+	 * Performs the upgrade and executes the instrumentation tests.
+	 */
 	@Suppress("detekt.LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {

@@ -15,19 +15,34 @@ import org.gradle.api.tasks.TaskAction
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
+/**
+ * Rewrites an R8 mapping file to retain readable names for debugging.
+ */
 @CacheableTask
 abstract class UnfuscateTask : DefaultTask() {
 
+	/**
+	 * R8 task that generated the original mapping.
+	 */
 	@get:Input
 	abstract val obfuscateTask: Property<R8Task>
 
+	/**
+	 * Original R8 mapping file.
+	 */
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract val mapping: RegularFileProperty
 
+	/**
+	 * Rewritten mapping file.
+	 */
 	@get:OutputFile
 	abstract val newMapping: RegularFileProperty
 
+	/**
+	 * Rewrite the configured mapping file.
+	 */
 	@TaskAction
 	fun unfuscate() {
 		@Suppress("UNUSED_VARIABLE") // Commented out some usages so the dependency can be removed.

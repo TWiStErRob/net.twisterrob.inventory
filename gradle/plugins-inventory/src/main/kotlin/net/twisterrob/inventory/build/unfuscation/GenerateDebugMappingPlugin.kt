@@ -11,7 +11,9 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.Locale
 
-// Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
+/**
+ * Experimental plugin that derives readable mappings from compiled class files.
+ */
 class GenerateDebugMappingPlugin : Plugin<Project> {
 
 	@Suppress("detekt.LongMethod", "detekt.CognitiveComplexMethod", "detekt.StringLiteralDuplication")

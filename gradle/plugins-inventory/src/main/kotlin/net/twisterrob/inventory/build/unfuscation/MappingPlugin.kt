@@ -12,6 +12,9 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
 
+/**
+ * Registers mapping transformations for debuggable, obfuscated application variants.
+ */
 class MappingPlugin : Plugin<Project> {
 
 	override fun apply(project: Project) {

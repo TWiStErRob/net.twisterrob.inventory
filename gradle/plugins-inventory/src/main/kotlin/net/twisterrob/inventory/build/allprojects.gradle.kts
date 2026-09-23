@@ -23,6 +23,9 @@ pluginManager.withPlugin("org.jetbrains.kotlin.android") {
 	configure<KotlinBaseExtension>(KotlinBaseExtension::configureKotlin)
 }
 
+/**
+ * Configure the Kotlin toolchain and compiler options used by every Kotlin project.
+ */
 fun KotlinBaseExtension.configureKotlin() {
 	jvmToolchain {
 		languageVersion = libs.versions.java.target.map(JavaLanguageVersion::of)

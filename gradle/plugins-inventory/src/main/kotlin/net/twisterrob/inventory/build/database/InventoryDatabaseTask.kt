@@ -18,28 +18,51 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 
+/**
+ * Generates a database asset from the configured category resource file and icons.
+ */
 @CacheableTask
 abstract class InventoryDatabaseTask : DefaultTask() {
 
+	/**
+	 * XML resource file that supplies the category names.
+	 */
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract val input: RegularFileProperty
 
+	/**
+	 * Directory containing the category SVG icons.
+	 */
 	@get:Optional
 	@get:InputDirectory
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract val iconFolder: DirectoryProperty
 
+	/**
+	 * Destination path of the generated SQL file relative to the Android assets folder [output].
+	 */
 	@get:Input
 	abstract val assetPath: Property<String>
 
+	/**
+	 * Output format used to generate the database file.
+	 *
+	 * Options: SQL, structure, null
+	 */
 	@get:Optional
 	@get:Input
 	abstract val conversion: Property<String>
 
+	/**
+	 * Directory in which the generated asset is written.
+	 */
 	@get:OutputDirectory
 	abstract val output: DirectoryProperty
 
+	/**
+	 * Generates the configured database asset.
+	 */
 	@TaskAction
 	fun generate() {
 		val input = input.get().asFile

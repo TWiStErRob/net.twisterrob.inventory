@@ -8,10 +8,14 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.register
 
+/**
+ * Registers tasks that verify the upgrade path of the application.
+ */
 class UpgradeTestPlugin : Plugin<Project> {
 
 	override fun apply(project: Project) {
 		(project.androidComponents as ApplicationAndroidComponentsExtension).onVariants { variant ->
+			@Suppress("detekt.LabeledExpression") // REPORT false positive, cannot be removed.
 			if (variant.androidTest == null) return@onVariants
 			val upgradeTest = project.tasks.register<UpgradeTestTask>("upgradeTest") {
 				enabled = false // TODO not working since AGP 3.3/3.4
