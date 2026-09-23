@@ -4,7 +4,7 @@ import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.kotlin.dsl.container
+import org.gradle.kotlin.dsl.domainObjectContainer
 import org.gradle.kotlin.dsl.register
 
 /**
@@ -26,7 +26,7 @@ import org.gradle.kotlin.dsl.register
 class InventoryDatabasePlugin : Plugin<Project> {
 
 	override fun apply(project: Project) {
-		val entities = project.container<InventoryDatabaseEntity>()
+		val entities = project.objects.domainObjectContainer(InventoryDatabaseEntity::class)
 		project.extensions.add("databaseEntities", entities)
 
 		val allTasks = project.tasks.register("generateDataBase") {
