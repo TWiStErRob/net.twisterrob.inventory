@@ -42,7 +42,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 	@get:PathSensitive(PathSensitivity.NONE)
 	abstract val adb: RegularFileProperty
 
-	@Suppress("LongMethod") // Will be split up when I make it work again.
+	@Suppress("detekt.LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {
 		val debugVariant = testedVariant.get()
@@ -98,9 +98,9 @@ abstract class UpgradeTestTask : DefaultTask() {
 			try {
 				val report = ResilientTestReport(ReportType.SINGLE_FLAVOR, results, reports)
 				report.generateReport()
-			} catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
+			} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Throwable) {
 				if (finished) { // Swallow if there's already a failure.
-					@Suppress("ThrowingExceptionFromFinally") // Safe, see condition.
+					@Suppress("detekt.ThrowingExceptionFromFinally") // Safe, see condition.
 					throw ex
 				}
 			}
@@ -151,7 +151,6 @@ abstract class UpgradeTestTask : DefaultTask() {
 		runner.run(runListener)
 
 		val result = runListener.runResult
-		@Suppress("ComplexCondition")
 		if (result.hasFailedTests()
 			|| result.isRunFailure
 			|| result.numTests <= 0

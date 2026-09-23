@@ -63,7 +63,7 @@ internal class DatabaseGenerator(
 		}
 	}
 
-	@Suppress("ReturnCount")
+	@Suppress("detekt.ReturnCount")
 	private fun parseCategory(xml: XMLStreamReader): Category? {
 		if ("string" != xml.localName) return null
 

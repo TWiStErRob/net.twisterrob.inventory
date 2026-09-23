@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 private val LOG = logger<InventorySpaceManager>()
 
-@Suppress("TooManyFunctions")
+@Suppress("detekt.TooManyFunctions")
 internal class InventorySpaceManager @Inject constructor(
 	@ApplicationContext
 	private val context: Context,
@@ -97,7 +97,7 @@ internal class InventorySpaceManager @Inject constructor(
 				LOG.debug("Restored {}", source)
 			} catch (ex: CancellationException) {
 				throw ex
-			} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+			} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Exception) {
 				LOG.error("Cannot restore {}", source, ex)
 			}
 		}

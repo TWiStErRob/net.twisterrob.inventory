@@ -66,7 +66,7 @@ internal class GetSizesUseCase @Inject constructor(
 	private fun safe(block: () -> Long): Result<Long> =
 		try {
 			Result.success(block())
-		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+		} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Exception) {
 			LOG.error("Cannot get size", ex)
 			Result.failure(ex)
 		}

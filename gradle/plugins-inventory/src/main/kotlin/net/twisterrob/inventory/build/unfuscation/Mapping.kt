@@ -29,7 +29,7 @@ internal class Mapping {
 			out.write(newName)
 			out.write(line.substring(match[MAPPING_PATTERN_OBFUSCATED_INDEX]!!.range.last + 1))
 			out.write("\n")
-		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+		} catch (@Suppress("detekt.TooGenericExceptionCaught") ex: Exception) {
 			val message = buildString {
 				append("Line #${num} failed: ${line}\n")
 				for (group in 0..match.size) {
