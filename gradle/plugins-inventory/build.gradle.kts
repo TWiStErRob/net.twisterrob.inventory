@@ -60,9 +60,9 @@ tasks.named("pluginDescriptors").configure {
 }
 
 tasks.withType<ValidatePlugins>().configureEach {
-	ignoreFailures.set(false)
-	failOnWarning.set(true)
-	enableStricterValidation.set(true)
+	ignoreFailures = false
+	failOnWarning = true
+	enableStricterValidation = true
 }
 
 detekt {

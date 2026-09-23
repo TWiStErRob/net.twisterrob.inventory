@@ -25,12 +25,9 @@ plugins {
 	id("com.gradle.develocity") version "4.5.1"
 }
 
-// TODO IsCIKt.CI is not visible in settings.gradle.
-def CI = System.getenv("GITHUB_ACTIONS") == "true"
-
 dependencyResolutionManagement {
 	includeBuild("gradle/platform-inventory")
-	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 	repositories {
 		google()
 		mavenCentral()
