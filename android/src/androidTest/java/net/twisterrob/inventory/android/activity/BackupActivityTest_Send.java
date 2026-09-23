@@ -8,6 +8,7 @@ import org.junit.runner.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -49,6 +50,11 @@ public class BackupActivityTest_Send {
 				.cancel();
 	}
 
+	@SkipOnCI(reason = "org.junit.AssumptionViolatedException: "
+			+ "There aren't enough apps installed to show a chooser for Backup > Send.\n"
+			+ "Expected: Intent resolves to activities a collection with size a value equal to or greater than <2>\n"
+			+ "but: resolved activities collection size <0> was less than <2>"
+	)
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
 	@OpensExternalApp({

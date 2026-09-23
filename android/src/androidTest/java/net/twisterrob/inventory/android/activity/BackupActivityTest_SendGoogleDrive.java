@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.GoogleDriveAutomator;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -49,6 +50,11 @@ public class BackupActivityTest_SendGoogleDrive {
 		backup.assertEmptyState();
 	}
 
+	@SkipOnCI(reason = "org.junit.AssumptionViolatedException: "
+			+ "Google Drive is not installed\n"
+			+ "Expected: \"com.google.android.apps.docs\" package installed\n"
+			+ "but: The following packages were installed: …."
+	)
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
 	@OpensExternalApp({
@@ -67,6 +73,11 @@ public class BackupActivityTest_SendGoogleDrive {
 				.cancel();
 	}
 
+	@SkipOnCI(reason = "org.junit.AssumptionViolatedException: " +
+			"Google Drive is not installed\n" +
+			"Expected: \"com.google.android.apps.docs\" package installed\n" +
+			"but: The following packages were installed: …."
+	)
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
 	@OpensExternalApp({

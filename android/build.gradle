@@ -84,6 +84,11 @@ android {
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
+		testInstrumentationRunnerArguments["notAnnotation"] = [
+				// Work around https://issuetracker.google.com/issues/563732801 until AGP reports ignored tests as skipped.
+				"org.junit.Ignore",
+				project.property("net.twisterrob.android.test.SkipOnCI").toBoolean() ? "net.twisterrob.android.test.SkipOnCI" : null,
+		].findAll().join(",")
 	}
 	compileOptions {
 		// Required because :orbit needs it for androidTest. Silly.
