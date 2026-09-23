@@ -22,15 +22,6 @@
 			<!-- lint:MissingClass workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
 		</activity>
 
-		<!--suppress AndroidDomInspection workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
-		<activity
-			android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher"
-			android:label="CompatibleLauncher"
-			tools:ignore="MissingClass"
-			>
-			<!-- lint:MissingClass workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
-		</activity>
-
 	</application>
 
 </manifest>

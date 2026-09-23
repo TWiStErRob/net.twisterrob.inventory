@@ -15,10 +15,6 @@ gradlePlugin {
 			id = "net.twisterrob.inventory.mapping"
 			implementationClass = "net.twisterrob.inventory.build.unfuscation.MappingPlugin"
 		}
-		create("upgrade-test") {
-			id = "net.twisterrob.inventory.upgradeTest"
-			implementationClass = "net.twisterrob.inventory.build.tests.upgrade.UpgradeTestPlugin"
-		}
 	}
 }
 
@@ -30,15 +26,6 @@ dependencies {
 	implementation(libs.plugins.ksp.asMarkerArtifact())
 	implementation(libs.plugins.daggerHilt.asMarkerArtifact())
 
-	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
-	// UpgradeTestTask: DeviceConnector, DeviceProvider
-	compileOnly(libs.plugin.android.tools.testApi)
-	// UpgradeTestTask: lot, TestAwareCustomTestRunListener: CustomTestRunListener
-	compileOnly(libs.plugin.android.tools.ddmlib)
-	// UpgradeTestTask: FileUtils, StdLogger, ILogger
-	compileOnly(libs.plugin.android.tools.common)
-	// endregion
-	
 	// TODEL https://github.com/gradle/gradle/issues/15383
 	implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
 
