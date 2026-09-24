@@ -15,4 +15,4 @@ for ((index = 0; index < ${#args[@]}; index++)); do
     fi
 done
 
-exec "${0}.real" "$@"
+exec "${INVENTORY_REAL_ADB:?}" "$@"

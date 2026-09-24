@@ -20,11 +20,18 @@ jobs:
 
         # AGP 9.4.1 asks API 21's `am` for a current-user command it does not support.
         # Keep additional output enabled so failure screenshots and SVG ZIPs are collected.
-        adb_path="$(command -v adb)"
-        adb_real="${adb_path}.real"
-        mv "$adb_path" "$adb_real"
-        trap 'mv "$adb_real" "$adb_path"' EXIT
-        install -m 755 ./.github/workflows/scripts/adb-api21-current-user.sh "$adb_path"
+        sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:?Android SDK not configured}}"
+        sdk_shadow="$(mktemp -d)"
+        for entry in "$sdk_root"/*; do
+          [[ "${entry##*/}" == platform-tools ]] || ln -s "$entry" "$sdk_shadow/${entry##*/}"
+        done
+        mkdir "$sdk_shadow/platform-tools"
+        for entry in "$sdk_root/platform-tools"/*; do
+          [[ "${entry##*/}" == adb ]] || ln -s "$entry" "$sdk_shadow/platform-tools/${entry##*/}"
+        done
+        install -m 755 ./.github/workflows/scripts/adb-api21-current-user.sh "$sdk_shadow/platform-tools/adb"
+        export INVENTORY_REAL_ADB="$sdk_root/platform-tools/adb"
+        export ANDROID_HOME="$sdk_shadow" ANDROID_SDK_ROOT="$sdk_shadow"
         
         # Used by net.twisterrob.android.test.SystemAnimations
         #adb shell pm grant ${packageName} android.permission.SET_ANIMATION_SCALE
