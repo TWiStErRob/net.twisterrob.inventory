@@ -17,6 +17,14 @@ jobs:
         # Workaround for :android:connectedDebugAndroidTest's output:
         # > additionalTestOutput is not supported on this device running API level 21 because the additional test output directory could not be found
         ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+
+        # AGP 9.4.1 asks API 21's `am` for a current-user command it does not support.
+        # Keep additional output enabled so failure screenshots and SVG ZIPs are collected.
+        adb_path="$(command -v adb)"
+        adb_real="${adb_path}.real"
+        mv "$adb_path" "$adb_real"
+        trap 'mv "$adb_real" "$adb_path"' EXIT
+        install -m 755 ./.github/workflows/scripts/adb-api21-current-user.sh "$adb_path"
         
         # Used by net.twisterrob.android.test.SystemAnimations
         #adb shell pm grant ${packageName} android.permission.SET_ANIMATION_SCALE
