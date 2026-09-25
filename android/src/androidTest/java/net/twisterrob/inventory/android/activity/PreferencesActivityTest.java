@@ -24,6 +24,7 @@ import androidx.test.uiautomator.*;
 
 import static androidx.test.core.app.ApplicationProvider.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.*;
@@ -85,6 +86,10 @@ public class PreferencesActivityTest {
 		prefs.assertIsInFront();
 	}
 
+	@SkipOnCI(reason = "org.junit.AssumptionViolatedException: \n"
+			+ "Expected: Intent can be resolved with flags: <0> to not null\n"
+			+ "but: was <Intent { act=android.intent.action.VIEW dat=market://details?id= }>"
+	)
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.InitialCondition.class, On.External.class})
 	@OpensExternalApp({

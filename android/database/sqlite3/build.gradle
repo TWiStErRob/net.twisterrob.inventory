@@ -61,12 +61,9 @@ def downloadGrammars = tasks.register("downloadGrammars", Copy.class) {
 
 tasks.named("generateGrammarSource", AntlrTask.class).configure {
 	dependsOn(downloadGrammars)
-	String pkg = "net.twisterrob.inventory.database.sqlite"
+	packageName = "net.twisterrob.inventory.database.sqlite"
 	arguments += [
-			"-package", pkg,
 			"-long-messages",
 			"-visitor",
 	]
-	// https://stackoverflow.com/a/49388412/253468
-	outputDirectory = new File(outputDirectory, pkg)
 }

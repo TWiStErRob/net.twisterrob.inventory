@@ -10,7 +10,6 @@ import net.twisterrob.inventory.build.dsl.libs
 plugins {
 	id("org.gradle.java-base")
 	id("com.google.dagger.hilt.android")
-	id("org.jetbrains.kotlin.android")
 	id("org.gradle.idea")
 }
 

@@ -34,12 +34,11 @@ android {
 	testOptions {
 		managedDevices {
 			def apiDevices = (29..33).collect {api ->
-				devices.register("api${api}", com.android.build.api.dsl.ManagedVirtualDevice) {
+				localDevices.register("api${api}") {
 					device = "Pixel 2"
 					apiLevel = api
 					require64Bit = true
-					// https://issuetracker.google.com/issues/267458959
-					systemImageSource = api == 32 || api == 33 ? "google_apis" : "default"
+					systemImageSource = "default"
 				}
 			}
 			groups.register("gmd") { group ->
@@ -56,9 +55,3 @@ androidComponents {
 	beforeVariants(selector().all(), { it.enableUnitTest = false })
 }
 
-// TODEL https://github.com/bumptech/glide/issues/5601
-tasks
-		.named { it == "compileDebugAndroidTestKotlin" }
-		.configureEach { org.jetbrains.kotlin.gradle.tasks.KotlinCompile task ->
-			task.compilerOptions.freeCompilerArgs.add("-Xwarning-level=EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled")
-		}

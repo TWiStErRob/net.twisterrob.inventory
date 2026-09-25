@@ -21,6 +21,7 @@ import androidx.test.runner.lifecycle.Stage;
 import static androidx.test.espresso.Espresso.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -181,6 +182,13 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		lastOperationFinishesActivity();
 	}
 
+	@SkipOnCI(reason = "org.junit.AssumptionViolatedException: "
+			+ "Only items have change type button for now.\n"
+			+ "Expected: "
+			+ "not an instance of net.twisterrob.inventory.android.activity.PropertyEditActivityTest_Create"
+			+ "and not an instance of net.twisterrob.inventory.android.activity.RoomEditActivityTest_Create\n"
+			+ "but: was <net.twisterrob.inventory.android.activity.RoomEditActivityTest_Create@2c8bf55f>"
+	)
 	@Category({UseCase.Complex.class, On.Category.class, Op.ChecksMessage.class})
 	@Test public void testChangeCategoryAndKeywordsDialog() {
 		assumeThat(

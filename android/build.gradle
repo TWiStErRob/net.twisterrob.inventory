@@ -1,7 +1,6 @@
 plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")
-	id("net.twisterrob.inventory.upgradeTest")
 	id("net.twisterrob.inventory.build.tests.instrumentation")
 }
 
@@ -85,6 +84,12 @@ android {
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
+		// AGP 9.4 serializes runner arguments with commas, so use a different separator until the runner starts.
+		testInstrumentationRunnerArguments["notAnnotation"] = [
+				// Work around https://issuetracker.google.com/issues/563732801 until AGP reports ignored tests as skipped.
+				"org.junit.Ignore",
+				project.property("net.twisterrob.android.test.SkipOnCI").toBoolean() ? "net.twisterrob.android.test.SkipOnCI" : null,
+		].findAll().join(":")
 	}
 	compileOptions {
 		// Required because :orbit needs it for androidTest. Silly.
@@ -165,9 +170,3 @@ afterEvaluate {
 	}
 }
 
-// TODEL https://github.com/bumptech/glide/issues/5601
-tasks
-		.named { it == "compileDebugKotlin" || it == "compileRelaseKotlin" }
-		.configureEach { org.jetbrains.kotlin.gradle.tasks.KotlinCompile task ->
-			task.compilerOptions.freeCompilerArgs.add("-Xwarning-level=EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled")
-		}

@@ -1,6 +1,5 @@
 plugins {
 	id("net.twisterrob.inventory.android.module")
-	id("org.jetbrains.kotlin.android")
 }
 
 dependencies {
