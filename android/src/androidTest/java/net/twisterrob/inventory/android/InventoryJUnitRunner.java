@@ -7,6 +7,11 @@ import net.twisterrob.inventory.android.hacks.ViewCompatHacks;
 
 public class InventoryJUnitRunner extends AndroidJUnitRunner {
 	@Override public void onCreate(Bundle arguments) {
+		String excludedAnnotations = arguments.getString("notAnnotation");
+		if (excludedAnnotations != null) {
+			// Restore the separator expected by AndroidX after AGP has parsed its comma-delimited arguments.
+			arguments.putString("notAnnotation", excludedAnnotations.replace(':', ','));
+		}
 		super.onCreate(arguments);
 		ViewCompatHacks.patchFor293190504();
 	}
