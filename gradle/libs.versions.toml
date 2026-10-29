@@ -3,7 +3,7 @@ java-target = "21"
 
 agp = "8.13.2"
 # 23.0.0 + agp
-agp-tools = "32.4.1"
+agp-tools = "32.5.0"
 twisterrob = "0.20" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 desugar = "2.1.5"
 detekt = "2.0.0-alpha.6"
